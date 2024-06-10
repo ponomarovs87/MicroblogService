@@ -18,6 +18,7 @@
   "homepage": "https://github.com/ponomarovs87/MicroblogService#readme",
   "dependencies": {
     "@prisma/client": "^5.15.0",
+    "config": "^3.3.11",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "prisma": "^5.15.0",
