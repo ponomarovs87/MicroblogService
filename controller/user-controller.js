@@ -42,14 +42,16 @@ class UserController {
   }
   async logout(req, res, next) {
     try {
-      return res.json("success");
+      const data = await userService.logout()
+      return res.json(data);
     } catch (err) {
       next(err);
     }
   }
   async edit(req, res, next) {
     try {
-      return res.json("success");
+      const data = await userService.edit(req.body)
+      return res.json(data);
     } catch (err) {
       next(err);
     }

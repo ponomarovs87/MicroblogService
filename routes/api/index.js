@@ -11,7 +11,12 @@ routesApi.post(
 );
 routesApi.post("/login", userController.login);
 routesApi.get("/logout", userController.logout);
-routesApi.put("/edit", userController.edit);
+routesApi.post(
+  "/edit",
+  userValidation.userEditValidator,
+  userValidation.accessValidation,
+  userController.edit
+);
 routesApi.delete("/delete", userController.delete);
 routesApi.post("/refresh", userController.refresh);
 

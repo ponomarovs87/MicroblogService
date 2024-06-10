@@ -54,7 +54,36 @@ class UserService {
       });
     }
 
-    return "success";// todo возможно токен-сервис нужен
+    return "success"; // todo возможно токен-сервис нужен
+  }
+  async logout() {
+    return "success"; // todo если удалять токен
+  }
+  async edit(reqData) {
+
+    const { email, newUserData } = reqData;
+
+    const { password, ...rest } = newUserData;
+
+    const hashPassword = await bcrypt.hash(
+      password,
+      config.bcrypt.salt
+    );
+
+    const data = {
+      ...rest,
+      hashPassword,
+    };
+
+    const updatedUser = await prisma.users.update({
+      where: {
+        email,
+      },
+      data: {
+        ...data,
+      },
+    });
+    return updatedUser;
   }
 }
 
