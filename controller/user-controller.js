@@ -7,21 +7,19 @@ const userService = require("../service/user-service");
 class UserController {
   async registration(req, res, next) {
     try {
-      // Проверяем, существует ли пользователь с таким же адресом электронной почты
       const existingUser = await prisma.users.findUnique({
         where: {
           email: req.body.email,
         },
       });
-
-      // Если пользователь уже существует, отправляем ответ с ошибкой
       if (existingUser) {
         throw ApiError.BadRequest(
           "Пользователь с таким адресом электронной почты уже существует",
           {
             email:
               "Пользователь с таким адресом электронной почты уже существует",
-          },req.body
+          },
+          req.body
         );
       }
 
@@ -36,7 +34,8 @@ class UserController {
   }
   async login(req, res, next) {
     try {
-      return res.json("success");
+      const Data = await userService.login(req.body);
+      return res.status(200).json(Data);
     } catch (err) {
       next(err);
     }
