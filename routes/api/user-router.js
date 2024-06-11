@@ -11,7 +11,7 @@ userRouterApi.post(
 );
 userRouterApi.post("/login", userController.login);
 userRouterApi.get("/logout", userController.logout);
-userRouterApi.post(
+userRouterApi.put(
   "/edit",
   userValidation.accessValidation,
   userValidation.userEditValidator,
