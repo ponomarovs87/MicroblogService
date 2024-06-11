@@ -74,7 +74,7 @@ class UserService {
       ...rest,
       hashPassword,
     };
-
+    
     const updatedUser = await prisma.users.update({
       where: {
         email,
@@ -84,6 +84,15 @@ class UserService {
       },
     });
     return updatedUser;
+  }
+  async delete(email){
+     await prisma.users.delete({
+      where: {
+        email
+      }
+    })
+    console.log();
+    return "success"
   }
 }
 

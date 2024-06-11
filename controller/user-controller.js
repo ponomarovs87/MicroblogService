@@ -42,7 +42,7 @@ class UserController {
   }
   async logout(req, res, next) {
     try {
-      const data = await userService.logout()
+      const data = await userService.logout();
       return res.json(data);
     } catch (err) {
       next(err);
@@ -50,7 +50,7 @@ class UserController {
   }
   async edit(req, res, next) {
     try {
-      const data = await userService.edit(req.body)
+      const data = await userService.edit(req.body);
       return res.json(data);
     } catch (err) {
       next(err);
@@ -58,14 +58,15 @@ class UserController {
   }
   async delete(req, res, next) {
     try {
-      return res.json("success");
+      const data = await userService.delete(req.body.email);
+      return res.json(data);
     } catch (err) {
       next(err);
     }
   }
   async refresh(req, res, next) {
     try {
-      return res.json("success");
+      return res.json("success"); // todo при добавлении токена
     } catch (err) {
       next(err);
     }
