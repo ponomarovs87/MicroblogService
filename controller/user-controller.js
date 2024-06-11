@@ -1,3 +1,5 @@
+require("dotenv").config();
+const config = require("config");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
@@ -26,6 +28,11 @@ class UserController {
       const userData = await userService.registration(
         req.body
       );
+      res.cookie("refreshToken", userData.refreshToken, {
+        maxAge: config.cookie.refreshTokenMaxAge,
+        httpOnly: true,
+        secure: true,
+      });
 
       return res.status(201).json(userData);
     } catch (err) {
@@ -34,16 +41,30 @@ class UserController {
   }
   async login(req, res, next) {
     try {
-      const Data = await userService.login(req.body);
-      return res.status(200).json(Data);
+      const userData = await userService.login(req.body);
+      res.cookie("refreshToken", userData.refreshToken, {
+        maxAge: config.cookie.refreshTokenMaxAge,
+        httpOnly: true,
+        secure: true,
+      });
+      return res.status(200).json(userData);
     } catch (err) {
       next(err);
     }
   }
   async logout(req, res, next) {
     try {
-      const data = await userService.logout();
-      return res.json(data);
+      if (
+        !req.cookies.refreshToken ||
+        req.cookies.refreshToken === ""
+      ) {
+        throw ApiError.BadRequest("Выход уже выполнен");
+      }
+      const token = await userService.logout(
+        req.cookies.refreshToken
+      );
+      res.clearCookie("refreshToken");
+      res.json(token);
     } catch (err) {
       next(err);
     }
@@ -59,6 +80,7 @@ class UserController {
   async delete(req, res, next) {
     try {
       const data = await userService.delete(req.body.email);
+      res.clearCookie("refreshToken");
       return res.json(data);
     } catch (err) {
       next(err);

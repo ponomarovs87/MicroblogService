@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { server } = require("config");
-
+const cookieParser = require("cookie-parser");
 const express = require("express");
 
 const routesApi = require("./routes/api/index");
@@ -9,6 +9,7 @@ const errorMiddleware = require("./middleware/error-middleware");
 
 const app = express();
 app.use(express.json()); // подключение парсера json
+app.use(cookieParser());
 app.use("/api",routesApi)
 app.set("view engine", "pug"); // подключение pug
 app.use(express.static("static"));

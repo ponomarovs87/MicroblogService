@@ -18,8 +18,7 @@ model Users {
   name         String
   birthDate    String
 
-  token Token? // Один-к-одному отношение с Token
-
+  token    Token? // Один-к-одному отношение с Token
   posts    Posts[]
   comments Comments[]
 }
@@ -27,9 +26,9 @@ model Users {
 model Token {
   id Int @id @unique @default(autoincrement())
 
-  refreshToken String
+  refreshToken String @unique
 
-  user   Users @relation(fields: [userId], references: [id]) // Один-к-одному отношение с Users
+  user   Users @relation(fields: [userId], references: [id], onDelete: Cascade) // Один-к-одному отношение с Users
   userId Int   @unique // userId теперь уникален для каждого токена
 }
 
@@ -42,7 +41,7 @@ model Posts {
   comments Comments[]
 
   userId Int // Внешний ключ, связывающий с моделью Users
-  user   Users @relation(fields: [userId], references: [id]) // Определение отношения с моделью Users
+  user   Users @relation(fields: [userId], references: [id], onDelete: Cascade) // Определение отношения с моделью Users
 }
 
 model Comments {
@@ -50,8 +49,8 @@ model Comments {
   content String
 
   postId Int // Внешний ключ, связывающий с моделью Posts
-  post   Posts @relation(fields: [postId], references: [id]) // Определение отношения с моделью Posts
+  post   Posts @relation(fields: [postId], references: [id], onDelete: Cascade) // Определение отношения с моделью Posts
 
   userId Int // Внешний ключ, связывающий с моделью Users
-  user   Users @relation(fields: [userId], references: [id]) // Определение отношения с моделью Users
+  user   Users @relation(fields: [userId], references: [id], onDelete: Cascade) // Определение отношения с моделью Users
 }

@@ -4,6 +4,8 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
 const ApiError = require("../exceptions/api-errors");
+const tokenService = require("./token-service");
+const { refreshToken } = require("../config/default");
 
 class UserService {
   async registration(reqData) {
@@ -21,13 +23,25 @@ class UserService {
       };
 
       // Создание новой записи пользователя в базе данных
-      const newUser = await prisma.users.create({
+      const user = await prisma.users.create({
         data: {
           ...data,
         },
       });
 
-      return newUser;
+      const tokens = tokenService.generateToken({
+        id: user.id,
+        email: user.email,
+      });
+      await tokenService.saveToken(
+        user.id,
+        tokens.refreshToken
+      );
+
+      return {
+        ...tokens,
+        user,
+      };
     } catch (err) {
       next(err);
     }
@@ -53,14 +67,25 @@ class UserService {
         password: `Неверный пароль`,
       });
     }
+    const tokens = tokenService.generateToken({
+      id: user.id,
+      email: user.email,
+    });
+    await tokenService.saveToken(
+      user.id,
+      tokens.refreshToken
+    );
 
-    return "success"; // todo возможно токен-сервис нужен
+    return {
+      ...tokens,
+      user,
+    };
   }
-  async logout() {
-    return "success"; // todo если удалять токен
+  async logout(refreshToken) {
+    const token = await tokenService.removeToken(refreshToken);
+    return token;
   }
   async edit(reqData) {
-
     const { email, newUserData } = reqData;
 
     const { password, ...rest } = newUserData;
@@ -74,7 +99,7 @@ class UserService {
       ...rest,
       hashPassword,
     };
-    
+
     const updatedUser = await prisma.users.update({
       where: {
         email,
@@ -85,14 +110,13 @@ class UserService {
     });
     return updatedUser;
   }
-  async delete(email){
-     await prisma.users.delete({
+  async delete(email) {
+    await prisma.users.delete({
       where: {
-        email
-      }
-    })
-    console.log();
-    return "success"
+        email,
+      },
+    });
+    return "success";
   }
 }
 

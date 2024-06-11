@@ -9,7 +9,7 @@ userRouterApi.post(
   userValidation.userCreateValidator,
   userController.registration
 );
-userRouterApi.post("/login", userController.login);
+userRouterApi.get("/login", userController.login);
 userRouterApi.get("/logout", userController.logout);
 userRouterApi.put(
   "/edit",
