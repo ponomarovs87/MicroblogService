@@ -10,6 +10,9 @@ class PostService {
 
       return "getAll"
     }
+    async getOnce(){
+        return "getOnce"
+    }
     async add() {
       
       return "add"

@@ -10,6 +10,10 @@ class PostController {
     const data = await postService.getAll();
     res.send(data);
   }
+  async getOnce(req,res,next){
+    const data = await postService.getOnce();
+    res.send(data)
+  }
   async add(req, res, next) {
     const data = await postService.add();
     res.send(data);
