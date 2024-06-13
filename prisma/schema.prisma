@@ -33,10 +33,13 @@ model Token {
 }
 
 model Posts {
-  id           Int    @id @unique @default(autoincrement())
+  id Int @id @unique @default(autoincrement())
+
   title        String
-  tags         String // хранение тегов как строки, разделенной запятыми
+  tags         String? // хранение тегов как строки, разделенной запятыми
   markdownText String
+  dateCreate   DateTime @default(now())
+  dateUpdate   DateTime? @updatedAt
 
   comments Comments[]
 
@@ -45,7 +48,8 @@ model Posts {
 }
 
 model Comments {
-  id      Int    @id @unique @default(autoincrement())
+  id Int @id @unique @default(autoincrement())
+
   content String
 
   postId Int // Внешний ключ, связывающий с моделью Posts

@@ -20,9 +20,9 @@ class UserValidation {
         }
         errors[error.path].push(error.message);
       });
-      //todo переделать в ApiError
-      err = ApiError.ValidationError(errors, req.body);
-      return next(err);
+      //todo переделать в ApiError хз
+      
+       next(ApiError.ValidationError(errors, req.body));
     }
   }
   async userEditValidator(req, _res, next) {
@@ -44,9 +44,8 @@ class UserValidation {
         }
         errors[error.path].push(error.message);
       });
-      //todo переделать в ApiError
-      err = ApiError.ValidationError(errors, req.body);
-      return next(err);
+      
+      next(ApiError.ValidationError(errors, req.body));
     }
   }
   async accessValidation(req, _res, next) {

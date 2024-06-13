@@ -6,26 +6,32 @@ const bcrypt = require("bcrypt");
 const ApiError = require("../exceptions/api-errors");
 
 class PostService {
-    async getAll() {
-
-      return "getAll"
-    }
-    async getOnce(){
-        return "getOnce"
-    }
-    async add() {
-      
-      return "add"
-    }
-    async edit() {
-      
-      return "edit"
-    }
-    async delete() {
-      
-      return "edit"
-    }
+  async getAll() {
+    const data = await prisma.posts.findMany(); // todo переделать под 10-15 постов за раз
+    return data;
   }
-  
-  module.exports = new PostService();
-  
+  async getOnce(postId) {// todo доделать чтобы вместо(вдобавок прилетали данные юзера кто создал имя фамилия)
+    const data = await prisma.posts.findUnique({
+      where: {
+        id: postId,
+      },
+    });
+    return data;
+  }
+  async add(newPostData) {
+    const data = await prisma.posts.create({
+      data: {
+        ...newPostData,
+      },
+    });
+    return data;
+  }
+  async edit() {
+    return "edit";
+  }
+  async delete() {
+    return "edit";
+  }
+}
+
+module.exports = new PostService();

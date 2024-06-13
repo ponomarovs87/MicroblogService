@@ -21,7 +21,7 @@ module.exports = {
   accessToken: {
     secret:
       process.env.JWT_ACCESS_SECRET || "jwtSecretStrong",
-    expiresIn: "20m",
+    expiresIn: "20d",
   },
   refreshToken: {
     secret:
