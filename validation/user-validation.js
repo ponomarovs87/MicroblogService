@@ -21,8 +21,8 @@ class UserValidation {
         errors[error.path].push(error.message);
       });
       //todo переделать в ApiError хз
-      
-       next(ApiError.ValidationError(errors, req.body));
+
+      next(ApiError.ValidationError(errors, req.body));
     }
   }
   async userEditValidator(req, _res, next) {
@@ -44,7 +44,7 @@ class UserValidation {
         }
         errors[error.path].push(error.message);
       });
-      
+
       next(ApiError.ValidationError(errors, req.body));
     }
   }

@@ -10,7 +10,8 @@ class PostService {
     const data = await prisma.posts.findMany(); // todo переделать под 10-15 постов за раз
     return data;
   }
-  async getOnce(postId) {// todo доделать чтобы вместо(вдобавок прилетали данные юзера кто создал имя фамилия)
+  async getOnce(postId) {
+    // todo доделать чтобы вместо(вдобавок прилетали данные юзера кто создал имя фамилия)
     const data = await prisma.posts.findUnique({
       where: {
         id: postId,
@@ -26,8 +27,18 @@ class PostService {
     });
     return data;
   }
-  async edit() {
-    return "edit";
+  async edit(reqData) {
+    const { postId, newPostData } = reqData;
+
+    const updatedUser = await prisma.posts.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        ...newPostData,
+      },
+    });
+    return updatedUser;
   }
   async delete() {
     return "edit";

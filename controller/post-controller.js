@@ -28,17 +28,25 @@ class PostController {
     }
   }
   async add(req, res, next) {
-    const newPostData = {
-      userId: req.user.id,
-      ...req.body,
-    };
+    try {
+      const newPostData = {
+        userId: req.user.id,
+        ...req.body,
+      };
 
-    const data = await postService.add(newPostData);
-    res.send(data);
+      const data = await postService.add(newPostData);
+      res.send(data);
+    } catch (err) {
+      next(err);
+    }
   }
   async edit(req, res, next) {
-    const data = await postService.edit();
-    res.send(data);
+    try {
+      const data = await postService.edit(req.body);
+      res.send(data);
+    } catch (err) {
+      next(err);
+    }
   }
   async delete(req, res, next) {
     const data = await postService.delete();
