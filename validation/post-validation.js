@@ -26,38 +26,47 @@ class PostValidation {
 
   async postEditValidator(req, _res, next) {
     try {
-      const postId = +req.body.postId;
+      try {
+        const postId = +req.params.postId;
 
-      const data = await prisma.posts.findUnique({
-        where: {
-          id: postId,
-        },
-      });
+        if (isNaN(postId)) {
+          throw ApiError.BadRequest(
+            "Некоректний адрес поста"
+          );
+        }
 
-      if (!postId || !data || isNaN(postId)) {
-        throw ApiError.BadRequest(
-          "Изменяемый пост не доступен"
-        );
+        const data = await prisma.posts.findUnique({
+          where: {
+            id: postId,
+          },
+        });
+        if (!postId || !data) {
+          throw ApiError.BadRequest(
+            "Изменяемый пост не доступен"
+          );
+        }
+        req.body.postId = postId;
+
+        req.body.postAuthorId = data.userId;
+      } catch (err) {
+        next(err);
       }
 
-      const postAuthor = data.userId;
-
-      const userId = req.user.id;
-
-      if (postAuthor !== userId) {
+      if (req.body.postAuthorId !== req.user.id) {
         throw ApiError.BadRequest(
           "У вас нет доступа для изменяи этого поста"
         );
       }
-      req.body.postId = postId
+
       try {
-        req.body.newPostData = await postCreateSchema.validate(
-          req.body.newPostData,
-          {
-            abortEarly: false,
-            stripUnknown: true,
-          }
-        );
+        req.body.newPostData =
+          await postCreateSchema.validate(
+            req.body.newPostData,
+            {
+              abortEarly: false,
+              stripUnknown: true,
+            }
+          );
       } catch (err) {
         let errors = {};
         err.inner.forEach((error) => {
