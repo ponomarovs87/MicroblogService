@@ -1,7 +1,9 @@
 const ApiError = require("../exceptions/api-errors");
 const { PrismaClient } = require("@prisma/client");
-const postCreateSchema = require("./schema/postCreateSchema");
 const prisma = new PrismaClient();
+const postCreateSchema = require("./schema/postCreateSchema");
+
+const validationHelper = require("./helpers/validationHelpers");
 
 class PostValidation {
   async postCreateValidator(req, _res, next) {
@@ -26,37 +28,20 @@ class PostValidation {
 
   async postEditValidator(req, _res, next) {
     try {
-      try {
-        const postId = +req.params.postId;
+      const id = validationHelper.paramsWayNumberValidation(
+        req.params.postId
+      );
 
-        if (isNaN(postId)) {
-          throw ApiError.BadRequest(
-            "Некоректний адрес поста"
-          );
-        }
+      const data =
+        await validationHelper.validatePostExists(id);
 
-        const data = await prisma.posts.findUnique({
-          where: {
-            id: postId,
-          },
-        });
-        if (!postId || !data) {
-          throw ApiError.BadRequest(
-            "Изменяемый пост не доступен"
-          );
-        }
-        req.body.postId = postId;
+      req.body.postId = data.id;
+      req.body.postAuthorId = data.userId;
 
-        req.body.postAuthorId = data.userId;
-      } catch (err) {
-        next(err);
-      }
-
-      if (req.body.postAuthorId !== req.user.id) {
-        throw ApiError.BadRequest(
-          "У вас нет доступа для изменяи этого поста"
-        );
-      }
+      validationHelper.checkOwnership(
+        req.body.postAuthorId,
+        req.user.id
+      );
 
       try {
         req.body.newPostData =
@@ -76,8 +61,31 @@ class PostValidation {
           errors[error.path].push(error.message);
         });
 
-        next(ApiError.ValidationError(errors, req.body));
+        throw ApiError.ValidationError(errors, req.body);
       }
+
+      next();
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async postDeleteValidator(req, _res, next) {
+    try {
+      const id = validationHelper.paramsWayNumberValidation(
+        req.params.postId
+      );
+
+      const data =
+        await validationHelper.validatePostExists(id);
+
+      req.body.postId = data.id;
+      req.body.postAuthorId = data.userId;
+
+      validationHelper.checkOwnership(
+        req.body.postAuthorId,
+        req.user.id
+      );
 
       next();
     } catch (err) {

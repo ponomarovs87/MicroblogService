@@ -40,8 +40,15 @@ class PostService {
     });
     return updatedUser;
   }
-  async delete() {
-    return "edit";
+  async delete(postId) {
+
+    const updatedUser = await prisma.posts.delete({
+      where: {
+        id: postId,
+      }
+
+    });
+    return updatedUser;
   }
 }
 

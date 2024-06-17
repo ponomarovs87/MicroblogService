@@ -4,6 +4,7 @@ const prisma = new PrismaClient();
 const ApiError = require("../exceptions/api-errors");
 const userService = require("../service/user-service");
 const postService = require("../service/post-service");
+const validationHelpers = require("../validation/helpers/validationHelpers");
 
 class PostController {
   async getAll(req, res, next) {
@@ -12,16 +13,14 @@ class PostController {
   }
   async getOnce(req, res, next) {
     try {
-      const postId = +req.params.postId;
-      if (isNaN(postId)) {
-        throw ApiError.BadRequest(
-          "Некорректный адрес поста"
+      const postId =
+        validationHelpers.paramsWayNumberValidation(
+          req.params.postId
         );
-      }
-      const data = await postService.getOnce(postId);
-      if (!data) {
-        throw ApiError.BadRequest("Пост не найден");
-      }
+
+      const data =
+        await validationHelpers.validatePostExists(postId);
+        
       res.send(data);
     } catch (err) {
       next(err);
@@ -49,8 +48,14 @@ class PostController {
     }
   }
   async delete(req, res, next) {
-    const data = await postService.delete();
-    res.send(data);
+    try {
+      const data = await postService.delete(
+        req.body.postId
+      );
+      res.send(data);
+    } catch (err) {
+      next(err);
+    }
   }
 }
 
