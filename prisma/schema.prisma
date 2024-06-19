@@ -50,7 +50,7 @@ model Posts {
 model Comments {
   id Int @id @unique @default(autoincrement())
 
-  content String
+  context String
 
   postId Int // Внешний ключ, связывающий с моделью Posts
   post   Posts @relation(fields: [postId], references: [id], onDelete: Cascade) // Определение отношения с моделью Posts

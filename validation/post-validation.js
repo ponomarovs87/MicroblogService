@@ -1,26 +1,37 @@
 const ApiError = require("../exceptions/api-errors");
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
-const postCreateSchema = require("./schema/postCreateSchema");
 
+const postCreateSchema = require("./schema/postCreateSchema");
 const validationHelper = require("./helpers/validationHelpers");
 
 class PostValidation {
+  constructor() {
+    this.postCreateValidator =
+      this.postCreateValidator.bind(this);
+    this.postEditValidator =
+      this.postEditValidator.bind(this);
+  }
+
+  async postIdValidation(req, _res, next) {
+    try {
+      req.body.postId =
+        validationHelper.paramsWayNumberValidation(
+          req.params.postId
+        );
+      next();
+    } catch (err) {
+      next(err);
+    }
+  }
   async postCreateValidator(req, _res, next) {
     try {
       req.body = await postCreateSchema.validate(req.body, {
         abortEarly: false,
-        stripUnknown: true,
+        stripUnknown: false,
       });
       next();
     } catch (err) {
-      let errors = {};
-      err.inner.forEach((error) => {
-        if (!errors[error.path]) {
-          errors[error.path] = [];
-        }
-        errors[error.path].push(error.message);
-      });
+      const errors =
+        validationHelper.formatValidationErrors(err);
 
       next(ApiError.ValidationError(errors, req.body));
     }
@@ -28,43 +39,17 @@ class PostValidation {
 
   async postEditValidator(req, _res, next) {
     try {
-      const id = validationHelper.paramsWayNumberValidation(
-        req.params.postId
-      );
-
       const data =
-        await validationHelper.validatePostExists(id);
-
-      req.body.postId = data.id;
-      req.body.postAuthorId = data.userId;
+        await validationHelper.validatePostExists(
+          req.body.postId
+        );
 
       validationHelper.checkOwnership(
-        req.body.postAuthorId,
+        data.userId,
         req.user.id
       );
 
-      try {
-        req.body.newPostData =
-          await postCreateSchema.validate(
-            req.body.newPostData,
-            {
-              abortEarly: false,
-              stripUnknown: true,
-            }
-          );
-      } catch (err) {
-        let errors = {};
-        err.inner.forEach((error) => {
-          if (!errors[error.path]) {
-            errors[error.path] = [];
-          }
-          errors[error.path].push(error.message);
-        });
-
-        throw ApiError.ValidationError(errors, req.body);
-      }
-
-      next();
+      await this.postCreateValidator(req, _res, next);
     } catch (err) {
       next(err);
     }
@@ -72,18 +57,13 @@ class PostValidation {
 
   async postDeleteValidator(req, _res, next) {
     try {
-      const id = validationHelper.paramsWayNumberValidation(
-        req.params.postId
-      );
-
       const data =
-        await validationHelper.validatePostExists(id);
-
-      req.body.postId = data.id;
-      req.body.postAuthorId = data.userId;
+        await validationHelper.validatePostExists(
+          req.body.postId
+        );
 
       validationHelper.checkOwnership(
-        req.body.postAuthorId,
+        data.userId,
         req.user.id
       );
 

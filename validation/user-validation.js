@@ -1,4 +1,5 @@
 const ApiError = require("../exceptions/api-errors");
+const validationHelpers = require("./helpers/validationHelpers");
 const userCreateSchema = require("./schema/userCreateSchema");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
@@ -13,15 +14,10 @@ class UserValidation {
       });
       next();
     } catch (err) {
-      let errors = {};
-      err.inner.forEach((error) => {
-        if (!errors[error.path]) {
-          errors[error.path] = [];
-        }
-        errors[error.path].push(error.message);
-      });
-      //todo переделать в ApiError хз
+      const errors =
+        validationHelpers.formatValidationErrors(err);
 
+      //todo переделать в ApiError хз придумаю позже выглядит мрак
       next(ApiError.ValidationError(errors, req.body));
     }
   }
@@ -37,13 +33,8 @@ class UserValidation {
         );
       next();
     } catch (err) {
-      let errors = {};
-      err.inner.forEach((error) => {
-        if (!errors[error.path]) {
-          errors[error.path] = [];
-        }
-        errors[error.path].push(error.message);
-      });
+      const errors =
+        validationHelpers.formatValidationErrors(err);
 
       next(ApiError.ValidationError(errors, req.body));
     }
@@ -64,7 +55,7 @@ class UserValidation {
         );
       }
       if (!user || !isPassEquals) {
-        throw ApiError.BadRequest("Нет Доступа");
+        throw ApiError.Forbidden()
       }
       next();
     } catch (err) {

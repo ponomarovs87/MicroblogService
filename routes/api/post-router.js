@@ -16,12 +16,14 @@ postRouterApi.post(
 postRouterApi.put(
   "/:postId",
   authMiddleware,
+  postValidation.postIdValidation,
   postValidation.postEditValidator,
   postController.edit
 );
 postRouterApi.delete(
   "/:postId",
   authMiddleware,
+  postValidation.postIdValidation,
   postValidation.postDeleteValidator,
   postController.delete
 );
