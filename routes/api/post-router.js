@@ -6,7 +6,7 @@ const authMiddleware = require("../../middleware/auth-middleware");
 const postValidation = require("../../validation/post-validation");
 
 postRouterApi.get("/", postController.getAll);
-postRouterApi.get("/:postId", postController.getOnce);
+postRouterApi.get("/:postId",postValidation.postIdValidation, postController.getOnce);
 postRouterApi.post(
   "/add",
   authMiddleware,

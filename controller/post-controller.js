@@ -7,20 +7,21 @@ const postService = require("../service/post-service");
 const validationHelpers = require("../validation/helpers/validationHelpers");
 
 class PostController {
-  async getAll(req, res, next) {
-    const data = await postService.getAll();
-    res.send(data);
+  async getAll(_req, res, next) {
+    try {
+      const data = await postService.getAll();
+      res.send(data);
+    } catch (err) {
+      next(err);
+    }
   }
   async getOnce(req, res, next) {
     try {
-      const postId =
-        validationHelpers.paramsWayNumberValidation(
-          req.params.postId
-        );
+      //!!!todo мрак переделать c одной стороны одна валидация, с другой хз ну я уже вынес валидацию!!!
+      await validationHelpers.validatePostExists(req.body.postId);
 
-      const data =
-        await validationHelpers.validatePostExists(postId);
-        
+      const data = await postService.getOnce(req.body.postId);
+
       res.send(data);
     } catch (err) {
       next(err);
