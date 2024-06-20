@@ -7,15 +7,16 @@ const ApiError = require("../exceptions/api-errors");
 
 class PostService {
   async getAll() {
+    //!!!! ДОБАВИТЬ DTO оооочень надо
     const data = await prisma.posts.findMany({
       include: {
-        _count: {
-          select: {
-            comments: true,
-          },
-        },
+        comments: { include: { user: true } },
+        user: true,
       },
-    }); // todo переделать под 10-15 постов за раз
+      orderBy: {
+        dateCreate: "desc",
+      },
+    });
     return data;
   }
   async getOnce(postId) {
