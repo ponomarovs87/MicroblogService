@@ -1,0 +1,15 @@
+extends ../layouts/layout
+
+block content
+  div.allUsers
+    table.mainTable
+      thead
+        each headerItem in ["ID", "Full name", "Current age", "Email"]
+          th(class=headerItem.toLowerCase())= headerItem
+      tbody
+        
+          tr
+            td= 1
+            td= 2
+            td= 3
+            td= 4
