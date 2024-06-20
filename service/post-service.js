@@ -7,7 +7,15 @@ const ApiError = require("../exceptions/api-errors");
 
 class PostService {
   async getAll() {
-    const data = await prisma.posts.findMany(); // todo переделать под 10-15 постов за раз
+    const data = await prisma.posts.findMany({
+      include: {
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
+    }); // todo переделать под 10-15 постов за раз
     return data;
   }
   async getOnce(postId) {
@@ -16,6 +24,7 @@ class PostService {
       where: {
         id: postId,
       },
+      include: { comments: true },
     });
     return data;
   }
@@ -41,12 +50,10 @@ class PostService {
     return updatedUser;
   }
   async delete(postId) {
-
     const updatedUser = await prisma.posts.delete({
       where: {
         id: postId,
-      }
-
+      },
     });
     return updatedUser;
   }
