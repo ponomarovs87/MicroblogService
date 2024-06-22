@@ -1,0 +1,64 @@
+.home {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: minmax(150px, 85%) minmax(
+      50px,
+      10%
+    );
+  column-gap: 5%;
+
+  .posts {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    column-gap: 10px;
+    row-gap: 10px;
+    h1.title {
+      grid-column: 1 / -1;
+      font-size: 2rem;
+      text-align: center;
+    }
+    div.postsTags {
+      grid-column: 1 / -1;
+      text-align: center;
+      background-color: yellow;
+    }
+    .postBlock {
+      display: grid;
+      grid-template-columns: 30% 68%;
+      gap: 10px;
+      max-width: 290px;//поменять!!!
+
+      .title {
+        margin: 0;
+        text-align: center;
+        width: 100%;
+        grid-column: 1 / -1;
+        background-color: aqua;
+      }
+
+      .lateralInfo {
+        background-color: aquamarine;
+      }
+
+      .postText {
+        background-color: blueviolet;
+        p {
+          word-wrap: break-word;
+        }
+      }
+
+      .commentsBlock {
+        background-color: cadetblue;
+        grid-column: 1 / -1;
+      }
+    }
+
+    // .postBlock:nth-of-type(-n + 3) {
+    //   grid-column: 1 / -1;
+    // }
+  }
+  .lateralBlock {
+    display: inline;
+    /* Стили для .lateralBlock */
+  }
+}

@@ -9,7 +9,7 @@ routesPug.get("/", async (_req, res) => {
       const posts = response.data;
   
       // Рендерим страницу и передаем данные в шаблон
-      res.render("pages/home/home", { posts });
+      res.render("pages/home/index", { posts });
     } catch (error) {
       console.error("Error fetching posts:", error);
       res.status(500).send("Error fetching posts");
