@@ -1,4 +1,4 @@
-// const validationHelpers = require("../validation/helpers/validationHelpers");
+// const ValidationHelpers = require("../validation/helpers/ValidationHelpers");
 
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();

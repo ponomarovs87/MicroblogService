@@ -1,7 +1,7 @@
 const apiError = require("../exceptions/api-errors");
 
 const postCreateSchema = require("./schema/postCreateSchema");
-const validationHelper = require("./helpers/validationHelpers");
+const ValidationHelper = require("./helpers/ValidationHelpers");
 
 class PostValidation {
   constructor() {
@@ -14,7 +14,7 @@ class PostValidation {
   async postIdValidation(req, _res, next) {
     try {
       req.body.postId =
-        validationHelper.paramsWayNumberValidation(
+        ValidationHelper.paramsWayNumberValidation(
           req.params.postId
         );
       next();
@@ -31,7 +31,7 @@ class PostValidation {
       next();
     } catch (err) {
       const errors =
-        validationHelper.formatValidationErrors(err);
+        ValidationHelper.formatValidationErrors(err);
 
       next(apiError.ValidationError(errors, req.body));
     }
@@ -40,11 +40,11 @@ class PostValidation {
   async postEditValidator(req, _res, next) {
     try {
       const data =
-        await validationHelper.validatePostExists(
+        await ValidationHelper.validatePostExists(
           req.body.postId
         );
 
-      validationHelper.checkOwnership(
+      ValidationHelper.checkOwnership(
         data.userId,
         req.user.id
       );
@@ -58,11 +58,11 @@ class PostValidation {
   async postDeleteValidator(req, _res, next) {
     try {
       const data =
-        await validationHelper.validatePostExists(
+        await ValidationHelper.validatePostExists(
           req.body.postId
         );
 
-      validationHelper.checkOwnership(
+      ValidationHelper.checkOwnership(
         data.userId,
         req.user.id
       );

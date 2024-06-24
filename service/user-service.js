@@ -3,8 +3,10 @@ const config = require("config");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
+
 const apiError = require("../exceptions/api-errors");
 const tokenService = require("./token-service");
+
 const { refreshToken } = require("../config/default");
 
 class UserService {

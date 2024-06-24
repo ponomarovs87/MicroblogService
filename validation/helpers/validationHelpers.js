@@ -2,7 +2,7 @@ const apiError = require("../../exceptions/api-errors");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-class validationHelper {
+class ValidationHelper {
   paramsWayNumberValidation(postId) {
     const id = +postId;
 
@@ -53,4 +53,4 @@ class validationHelper {
   }
 }
 
-module.exports = new validationHelper();
+module.exports = new ValidationHelper();

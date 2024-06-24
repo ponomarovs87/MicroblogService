@@ -2,14 +2,14 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const ApiError = require("../exceptions/api-errors");
-const userService = require("../service/user-service");
-const postService = require("../service/post-service");
-const validationHelpers = require("../validation/helpers/validationHelpers");
+const UserService = require("../service/user-service");
+const PostService = require("../service/post-service");
+const ValidationHelpers = require("../validation/helpers/ValidationHelpers");
 
 class PostController {
   async getAll(_req, res, next) {
     try {
-      const data = await postService.getAll();
+      const data = await PostService.getAll();
       res.send(data);
     } catch (err) {
       next(err);
@@ -18,9 +18,13 @@ class PostController {
   async getOnce(req, res, next) {
     try {
       //!!!todo мрак переделать c одной стороны одна валидация, с другой хз ну я уже вынес валидацию!!!
-      await validationHelpers.validatePostExists(req.body.postId);
+      await ValidationHelpers.validatePostExists(
+        req.body.postId
+      );
 
-      const data = await postService.getOnce(req.body.postId);
+      const data = await PostService.getOnce(
+        req.body.postId
+      );
 
       res.send(data);
     } catch (err) {
@@ -34,7 +38,7 @@ class PostController {
         ...req.body,
       };
 
-      const data = await postService.add(newPostData);
+      const data = await PostService.add(newPostData);
       res.send(data);
     } catch (err) {
       next(err);
@@ -42,7 +46,7 @@ class PostController {
   }
   async edit(req, res, next) {
     try {
-      const data = await postService.edit(req.body);
+      const data = await PostService.edit(req.body);
       res.send(data);
     } catch (err) {
       next(err);
@@ -50,7 +54,7 @@ class PostController {
   }
   async delete(req, res, next) {
     try {
-      const data = await postService.delete(
+      const data = await PostService.delete(
         req.body.postId
       );
       res.send(data);
