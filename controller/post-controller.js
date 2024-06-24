@@ -1,15 +1,10 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
-
-const ApiError = require("../exceptions/api-errors");
-const UserService = require("../service/user-service");
-const PostService = require("../service/post-service");
-const ValidationHelpers = require("../validation/helpers/ValidationHelpers");
+const postService = require("../service/post-service");
+const validationHelpers = require("../validation/helpers/validationHelpers");
 
 class PostController {
   async getAll(_req, res, next) {
     try {
-      const data = await PostService.getAll();
+      const data = await postService.getAll();
       res.send(data);
     } catch (err) {
       next(err);
@@ -18,11 +13,11 @@ class PostController {
   async getOnce(req, res, next) {
     try {
       //!!!todo мрак переделать c одной стороны одна валидация, с другой хз ну я уже вынес валидацию!!!
-      await ValidationHelpers.validatePostExists(
+      await validationHelpers.validatePostExists(
         req.body.postId
       );
 
-      const data = await PostService.getOnce(
+      const data = await postService.getOnce(
         req.body.postId
       );
 
@@ -38,7 +33,7 @@ class PostController {
         ...req.body,
       };
 
-      const data = await PostService.add(newPostData);
+      const data = await postService.add(newPostData);
       res.send(data);
     } catch (err) {
       next(err);
@@ -46,7 +41,7 @@ class PostController {
   }
   async edit(req, res, next) {
     try {
-      const data = await PostService.edit(req.body);
+      const data = await postService.edit(req.body);
       res.send(data);
     } catch (err) {
       next(err);
@@ -54,7 +49,7 @@ class PostController {
   }
   async delete(req, res, next) {
     try {
-      const data = await PostService.delete(
+      const data = await postService.delete(
         req.body.postId
       );
       res.send(data);
