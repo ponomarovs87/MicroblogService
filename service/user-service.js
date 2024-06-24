@@ -3,8 +3,10 @@ const config = require("config");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
-const ApiError = require("../exceptions/api-errors");
-const TokenService = require("./token-service");
+
+const apiError = require("../exceptions/api-errors");
+const tokenService = require("./token-service");
+
 const { refreshToken } = require("../config/default");
 
 class UserService {
@@ -29,11 +31,11 @@ class UserService {
         },
       });
 
-      const tokens = TokenService.generateToken({
+      const tokens = tokenService.generateToken({
         id: user.id,
         email: user.email,
       });
-      await TokenService.saveToken(
+      await tokenService.saveToken(
         user.id,
         tokens.refreshToken
       );
@@ -53,7 +55,7 @@ class UserService {
       },
     });
     if (!user) {
-      throw ApiError.BadRequest("Пользователь не найден", {
+      throw apiError.BadRequest("Пользователь не найден", {
         email: "Пользователь не найден",
       });
     }
@@ -63,15 +65,15 @@ class UserService {
       user.hashPassword
     );
     if (!isPassEquals) {
-      throw ApiError.BadRequest(`Неверный пароль`, {
+      throw apiError.BadRequest(`Неверный пароль`, {
         password: `Неверный пароль`,
       });
     }
-    const tokens = TokenService.generateToken({
+    const tokens = tokenService.generateToken({
       id: user.id,
       email: user.email,
     });
-    await TokenService.saveToken(
+    await tokenService.saveToken(
       user.id,
       tokens.refreshToken
     );
@@ -82,7 +84,7 @@ class UserService {
     };
   }
   async logout(refreshToken) {
-    const token = await TokenService.removeToken(
+    const token = await tokenService.removeToken(
       refreshToken
     );
     return token;
@@ -122,15 +124,15 @@ class UserService {
   }
   async refresh(refreshToken) {
     if (!refreshToken) {
-      throw ApiError.UnauthorizedError();
+      throw apiError.UnauthorizedError();
     }
     const userData =
-      TokenService.validateRefreshToken(refreshToken);
-    const tokenFromDB = await TokenService.fiendToken(
+      tokenService.validateRefreshToken(refreshToken);
+    const tokenFromDB = await tokenService.fiendToken(
       refreshToken
     );
     if (!userData || !tokenFromDB) {
-      throw ApiError.UnauthorizedError();
+      throw apiError.UnauthorizedError();
     }
 
     const user = await await prisma.users.findUnique({
@@ -138,12 +140,12 @@ class UserService {
         id: userData.id,
       },
     });
-    const tokens = TokenService.generateToken({
+    const tokens = tokenService.generateToken({
       id: user.id,
       email: user.email,
     });
 
-    await TokenService.saveToken(
+    await tokenService.saveToken(
       user.id,
       tokens.refreshToken
     );
