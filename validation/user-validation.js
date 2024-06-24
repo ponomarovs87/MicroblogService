@@ -1,4 +1,4 @@
-const ApiError = require("../exceptions/api-errors");
+const apiError = require("../exceptions/api-errors");
 const validationHelpers = require("./helpers/validationHelpers");
 const userCreateSchema = require("./schema/userCreateSchema");
 const { PrismaClient } = require("@prisma/client");
@@ -18,7 +18,7 @@ class UserValidation {
         validationHelpers.formatValidationErrors(err);
 
       //todo переделать в ApiError хз придумаю позже выглядит мрак
-      next(ApiError.ValidationError(errors, req.body));
+      next(apiError.ValidationError(errors, req.body));
     }
   }
   async userEditValidator(req, _res, next) {
@@ -36,7 +36,7 @@ class UserValidation {
       const errors =
         validationHelpers.formatValidationErrors(err);
 
-      next(ApiError.ValidationError(errors, req.body));
+      next(apiError.ValidationError(errors, req.body));
     }
   }
   async accessValidation(req, _res, next) {
@@ -55,7 +55,7 @@ class UserValidation {
         );
       }
       if (!user || !isPassEquals) {
-        throw ApiError.Forbidden()
+        throw apiError.Forbidden()
       }
       next();
     } catch (err) {

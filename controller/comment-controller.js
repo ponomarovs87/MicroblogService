@@ -3,7 +3,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-class commentController {
+class CommentController {
   async add(req, res, next) {
     try {
       // todo возможно стоит сделать DTO
@@ -63,4 +63,4 @@ class commentController {
   }
 }
 
-module.exports = new commentController();
+module.exports = new CommentController();
