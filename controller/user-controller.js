@@ -4,7 +4,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const ApiError = require("../exceptions/api-errors");
-const userService = require("../service/user-service");
+const UserService = require("../service/user-service");
 
 class UserController {
   async registration(req, res, next) {
@@ -25,7 +25,7 @@ class UserController {
         );
       }
 
-      const userData = await userService.registration(
+      const userData = await UserService.registration(
         req.body
       );
       res.cookie("refreshToken", userData.refreshToken, {
@@ -41,7 +41,7 @@ class UserController {
   }
   async login(req, res, next) {
     try {
-      const userData = await userService.login(req.body);
+      const userData = await UserService.login(req.body);
       res.cookie("refreshToken", userData.refreshToken, {
         maxAge: config.cookie.refreshTokenMaxAge,
         httpOnly: true,
@@ -60,7 +60,7 @@ class UserController {
       ) {
         throw ApiError.BadRequest("Выход уже выполнен");
       }
-      const token = await userService.logout(
+      const token = await UserService.logout(
         req.cookies.refreshToken
       );
       res.clearCookie("refreshToken");
@@ -71,7 +71,7 @@ class UserController {
   }
   async edit(req, res, next) {
     try {
-      const data = await userService.edit(req.body);
+      const data = await UserService.edit(req.body);
       return res.json(data);
     } catch (err) {
       next(err);
@@ -79,7 +79,7 @@ class UserController {
   }
   async delete(req, res, next) {
     try {
-      const data = await userService.delete(req.body.email);
+      const data = await UserService.delete(req.body.email);
       res.clearCookie("refreshToken");
       return res.json(data);
     } catch (err) {
@@ -89,7 +89,9 @@ class UserController {
   async refresh(req, res, next) {
     try {
       const { refreshToken } = req.cookies;
-      const userData = await userService.refresh(refreshToken);
+      const userData = await UserService.refresh(
+        refreshToken
+      );
       res.cookie("refreshToken", userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
