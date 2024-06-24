@@ -1,9 +1,9 @@
 const ApiError = require("../exceptions/api-errors");
 
-const validationHelper = require("./helpers/validationHelpers");
+const ValidationHelper = require("./helpers/ValidationHelpers");
 const commentCreateSchema = require("./schema/commentCreateSchema");
 
-class commentValidation {
+class CommentValidation {
   constructor() {
     this.commentCreateValidator =
       this.commentCreateValidator.bind(this);
@@ -23,7 +23,7 @@ class commentValidation {
       next();
     } catch (err) {
       const errors =
-        validationHelper.formatValidationErrors(err);
+        ValidationHelper.formatValidationErrors(err);
 
       next(ApiError.ValidationError(errors, req.body));
     }
@@ -32,11 +32,11 @@ class commentValidation {
   async commentEditValidator(req, _res, next) {
     try {
       const commentData =
-        await validationHelper.validateCommentExists(
+        await ValidationHelper.validateCommentExists(
           req.body.commentId
         );
 
-      validationHelper.checkOwnership(
+      ValidationHelper.checkOwnership(
         commentData.userId,
         req.user.id
       );
@@ -50,11 +50,11 @@ class commentValidation {
   async commentDeleteValidator(req, _res, next) {
     try {
       const commentData =
-        await validationHelper.validateCommentExists(
+        await ValidationHelper.validateCommentExists(
           req.body.commentId
         );
 
-      validationHelper.checkOwnership(
+      ValidationHelper.checkOwnership(
         commentData.userId,
         req.user.id
       );
@@ -66,4 +66,4 @@ class commentValidation {
   }
 }
 
-module.exports = new commentValidation();
+module.exports = new CommentValidation();

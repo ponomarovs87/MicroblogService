@@ -4,7 +4,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
 const ApiError = require("../exceptions/api-errors");
-const tokenService = require("./token-service");
+const TokenService = require("./token-service");
 const { refreshToken } = require("../config/default");
 
 class UserService {
@@ -29,11 +29,11 @@ class UserService {
         },
       });
 
-      const tokens = tokenService.generateToken({
+      const tokens = TokenService.generateToken({
         id: user.id,
         email: user.email,
       });
-      await tokenService.saveToken(
+      await TokenService.saveToken(
         user.id,
         tokens.refreshToken
       );
@@ -67,11 +67,11 @@ class UserService {
         password: `Неверный пароль`,
       });
     }
-    const tokens = tokenService.generateToken({
+    const tokens = TokenService.generateToken({
       id: user.id,
       email: user.email,
     });
-    await tokenService.saveToken(
+    await TokenService.saveToken(
       user.id,
       tokens.refreshToken
     );
@@ -82,7 +82,7 @@ class UserService {
     };
   }
   async logout(refreshToken) {
-    const token = await tokenService.removeToken(
+    const token = await TokenService.removeToken(
       refreshToken
     );
     return token;
@@ -125,8 +125,8 @@ class UserService {
       throw ApiError.UnauthorizedError();
     }
     const userData =
-      tokenService.validateRefreshToken(refreshToken);
-    const tokenFromDB = await tokenService.fiendToken(
+      TokenService.validateRefreshToken(refreshToken);
+    const tokenFromDB = await TokenService.fiendToken(
       refreshToken
     );
     if (!userData || !tokenFromDB) {
@@ -138,12 +138,12 @@ class UserService {
         id: userData.id,
       },
     });
-    const tokens = tokenService.generateToken({
+    const tokens = TokenService.generateToken({
       id: user.id,
       email: user.email,
     });
 
-    await tokenService.saveToken(
+    await TokenService.saveToken(
       user.id,
       tokens.refreshToken
     );
