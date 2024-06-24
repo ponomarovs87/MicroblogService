@@ -1,0 +1,61 @@
+section.editAccount
+
+  h2=`Изменить аккаунт:`
+  form(method="POST").form
+    .group
+      label(for="email") Email 
+      input(type="email" placeholder="myMail@ukr.net" name="email" required value=(formData && formData.email))
+      - const emailErrors = errors && errors.email ? errors.email : [];
+      if (emailErrors.length > 0)
+        each error in emailErrors
+          p#error= error
+
+    .group
+      label(for="password") Password
+      input(type="password" placeholder="Password123" name="password" required)
+      - const passwordErrors = errors && errors.password ? errors.password : [];
+      if (passwordErrors.length > 0)
+        each error in passwordErrors
+          p#error= error
+
+    .group
+      label(for="newUserEmail") New User Email 
+      input(type="email" placeholder="newMail@ukr.net" name="newUserEmail" required value=(formData && formData.newUserData.email))
+      - const newEmailErrors = errors  && errors.email ? errors.email : [];
+      if (newEmailErrors.length > 0)
+        each error in newEmailErrors
+          p#error= error
+
+    .group
+      label(for="newUserPassword") New User Password
+      input(type="password" placeholder="NewPassword123" name="newUserPassword" required)
+      - const newPasswordErrors = errors  && errors.password ? errors.password : [];
+      if (newPasswordErrors.length > 0)
+        each error in newPasswordErrors
+          p#error= error
+
+    .group
+      label(for="newUserName") Name
+      input(type="text" placeholder="Name" name="newUserName" required value=(formData && formData.newUserData.name))
+      - const nameErrors = errors  && errors.name ? errors.name : [];
+      if (nameErrors.length > 0)
+        each error in nameErrors
+          p#error= error
+
+    .group
+      label(for="newUserSurname") Surname
+      input(type="text" placeholder="Surname" name="newUserSurname" required value=(formData && formData.newUserData.surname))
+      - const surnameErrors = errors  && errors.surname ? errors.surname : [];
+      if (surnameErrors.length > 0)
+        each error in surnameErrors
+          p#error= error
+
+    .group
+      label(for="newUserBirthDate") Birth Date 
+      input(type="date" placeholder="####" name="newUserBirthDate" required value=(formData && formData.newUserData.birthDate))
+      - const birthDateErrors = errors  && errors.birthDate ? errors.birthDate : [];
+      if (birthDateErrors.length > 0)
+        each error in birthDateErrors
+          p#error= error
+
+    button(type="submit") Save New User

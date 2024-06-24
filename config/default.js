@@ -7,10 +7,6 @@ function calculateString(string) {
 }
 
 module.exports = {
-  client: {
-    host: "http://localhost",
-    port: process.env.CLIENT_PORT || 3001,
-  },
   server: {
     host: "http://localhost",
     port: process.env.SERVER_PORT || 3000,
@@ -34,5 +30,9 @@ module.exports = {
       calculateString(
         process.env.COOKIE_REFRESH_TOKEN_MAX_AGE
       ) || 30 * 24 * 60 * 60 * 1000,
+    accessTokenMaxAge:
+      calculateString(
+        process.env.COOKIE_REFRESH_TOKEN_MAX_AGE
+      ) || 24 * 60 * 60 * 1000,
   },
 };

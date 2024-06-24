@@ -1,0 +1,14 @@
+section.removeAccount
+
+    h2=`Удалить аккаунт:`
+    form(method="POST").form
+        .group
+            label(for="email") Email 
+            input(type="email" placeholder="myMail@ukr.net" name="email" required value=(formData && formData.email))
+
+        .group
+            label(for="password") Password
+            input(type="password" placeholder="Password123" name="password" required)
+
+
+        button(type="submit") remove my account
