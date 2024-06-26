@@ -1,5 +1,5 @@
 
-const apiError = require("../exceptions/api-errors");
+const ApiError = require("../exceptions/api-errors");
 const validationHelpers = require("./helpers/validationHelpers");
 
 const userCreateSchema = require("./schema/userCreateSchema");
@@ -20,7 +20,7 @@ class UserValidation {
       validationHelpers.formatValidationErrors(err);
 
       //todo переделать в ApiError хз придумаю позже выглядит мрак
-      next(apiError.ValidationError(errors, req.body));
+      next(ApiError.ValidationError(errors, req.body));
     }
   }
   async userEditValidator(req, _res, next) {
@@ -38,7 +38,7 @@ class UserValidation {
       const errors =
         validationHelpers.formatValidationErrors(err);
 
-      next(apiError.ValidationError(errors, req.body));
+      next(ApiError.ValidationError(errors, req.body));
     }
   }
   async accessValidation(req, _res, next) {
@@ -58,7 +58,7 @@ class UserValidation {
       }
       if (!user || !isPassEquals) {
 
-        throw apiError.Forbidden()
+        throw ApiError.Forbidden()
       }
       next();
     } catch (err) {
