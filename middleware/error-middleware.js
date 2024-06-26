@@ -1,17 +1,19 @@
-const apiError = require("../exceptions/api-errors");
+const ClientError = require("../exceptions/client-errors");
 
 module.exports = function (err, req, res, next) {
-  console.log(err); // todo убрать перед диплоем
-  if (err instanceof apiError) {
-    return res
-      .status(err.status)
-      .json({
-        message: err.message,
-        errors: err.errors,
-        reqData: err.reqData,
-      });
+  console.log("ClientError", err); // todo убрать перед диплоем
+
+  if (err instanceof ClientError) {
+    return res.status(err.status).render(err.renderPage, {
+      message: err.message,
+      errors: err.errors,
+      formData: err.reqData,
+    });
   }
-  return res
-    .status(500)
-    .json({ message: `непредвиденная ошибка` });
+
+  // Для всех других типов ошибок
+  return res.status(500).render("pages/error", {
+    message: "Непредвиденная ошибка",
+    err,
+  });
 };

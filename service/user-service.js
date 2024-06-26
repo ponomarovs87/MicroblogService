@@ -8,10 +8,11 @@ const apiError = require("../exceptions/api-errors");
 const tokenService = require("./token-service");
 
 const { refreshToken } = require("../config/default");
+const ClientError = require("../exceptions/client-errors");
 
 class UserService {
   async registration(reqData) {
-    const { password, ...rest } = reqData;
+    const { password, pugPage, ...rest } = reqData;
 
     try {
       const hashPassword = await bcrypt.hash(
@@ -24,7 +25,6 @@ class UserService {
         hashPassword,
       };
 
-      // Создание новой записи пользователя в базе данных
       const user = await prisma.users.create({
         data: {
           ...data,
@@ -48,15 +48,18 @@ class UserService {
       next(err);
     }
   }
-  async login({ password, email }) {
+  async login({ password, email, pugPage }) {
     const user = await prisma.users.findUnique({
       where: {
         email,
       },
     });
     if (!user) {
-      throw apiError.BadRequest("Пользователь не найден", {
-        email: "Пользователь не найден",
+      const message = `Пользователя с email ${email} не существует `;
+      throw ClientError.BadRequest({
+        message,
+        errors: { email: message },
+        renderPage: pugPage,
       });
     }
 
@@ -65,9 +68,7 @@ class UserService {
       user.hashPassword
     );
     if (!isPassEquals) {
-      throw apiError.BadRequest(`Неверный пароль`, {
-        password: `Неверный пароль`,
-      });
+      throw ClientError.Forbidden({ renderPage: pugPage });
     }
     const tokens = tokenService.generateToken({
       id: user.id,

@@ -1,5 +1,5 @@
-
 const apiError = require("../exceptions/api-errors");
+const ClientError = require("../exceptions/client-errors");
 const validationHelpers = require("./helpers/validationHelpers");
 
 const userCreateSchema = require("./schema/userCreateSchema");
@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
 
 class UserValidation {
-  async userCreateValidator(req, _res, next) {
+  async userCreateValidator(req, res, next) {
     try {
       req.body = await userCreateSchema.validate(req.body, {
         abortEarly: false,
@@ -16,18 +16,36 @@ class UserValidation {
       });
       next();
     } catch (err) {
-      const errors =
-      validationHelpers.formatValidationErrors(err);
 
-      //todo переделать в ApiError хз придумаю позже выглядит мрак
-      next(apiError.ValidationError(errors, req.body));
+      const errors =
+        validationHelpers.formatValidationErrors(err);
+
+      next(
+        ClientError.ValidationError({
+          errors,
+          reqData: req.body,
+          renderPage: "pages/auth/registration/index",
+        })
+      );
     }
   }
+  //!
   async userEditValidator(req, _res, next) {
+    req.request = {
+      email: req.body.email,
+      password: req.body.password,
+      newUserData: {
+        email: req.body.newUserEmail,
+        password: req.body.newUserPassword,
+        surname: req.body.newUserSurname,
+        name: req.body.newUserName,
+        birthDate: req.body.newUserBirthDate,
+      },
+    };
     try {
       req.body.newUserData =
         await userCreateSchema.validate(
-          req.body.newUserData,
+          req.request.newUserData,
           {
             abortEarly: false,
             stripUnknown: true,
@@ -37,8 +55,13 @@ class UserValidation {
     } catch (err) {
       const errors =
         validationHelpers.formatValidationErrors(err);
-
-      next(apiError.ValidationError(errors, req.body));
+      next(
+        ClientError.ValidationError({
+          errors,
+          reqData: req.request,
+          renderPage: "pages/auth/myAccount/index",
+        })
+      );
     }
   }
   async accessValidation(req, _res, next) {
@@ -57,8 +80,7 @@ class UserValidation {
         );
       }
       if (!user || !isPassEquals) {
-
-        throw apiError.Forbidden()
+        throw ClientError.Forbidden({});
       }
       next();
     } catch (err) {

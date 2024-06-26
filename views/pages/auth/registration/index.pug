@@ -4,5 +4,8 @@ block additionalStyles
     link(href="/auth-styles.css" rel="stylesheet")
 
 block content
+    if message
+        p#error= message
     section.auth
         include registrationForm
+    script(src="/registration.js") 

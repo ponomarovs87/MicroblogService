@@ -1,22 +1,14 @@
 section.editAccount
 
   h2=`Изменить аккаунт:`
-  form(method="POST").form
+  form(method="POST" action="/user/edit").form
     .group
       label(for="email") Email 
       input(type="email" placeholder="myMail@ukr.net" name="email" required value=(formData && formData.email))
-      - const emailErrors = errors && errors.email ? errors.email : [];
-      if (emailErrors.length > 0)
-        each error in emailErrors
-          p#error= error
 
     .group
       label(for="password") Password
       input(type="password" placeholder="Password123" name="password" required)
-      - const passwordErrors = errors && errors.password ? errors.password : [];
-      if (passwordErrors.length > 0)
-        each error in passwordErrors
-          p#error= error
 
     .group
       label(for="newUserEmail") New User Email 

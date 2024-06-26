@@ -1,25 +1,27 @@
-const apiError = require("../exceptions/api-errors");
+const ClientError = require("../exceptions/client-errors");
 const tokenService = require("../service/token-service");
 
 module.exports = function (req, res, next) {
   try {
-    const authorizationHeader = req.headers.authorization;
-    if (!authorizationHeader) {
-      return next(apiError.UnauthorizedError());
+    if (!req.cookies) {
+      return next(ClientError.Forbidden({}))
     }
-    const accessToken = authorizationHeader.split(" ")[1];
+
+    const {accessToken} = req.cookies
     if (!accessToken) {
-      return next(apiError.UnauthorizedError());
+      return next(ClientError.Forbidden({}))
     }
+
     const userData =
       tokenService.validateAccessToken(accessToken);
+
     if (!userData) {
-      return next(apiError.UnauthorizedError());
+      return next(ClientError.UnauthorizedError());
     }
-    //todo можно добавить проверку тот ли это юзер
+
     req.user = userData;
     next();
   } catch (err) {
-    next(apiError.UnauthorizedError());
+    next(ClientError.UnauthorizedError());
   }
 };

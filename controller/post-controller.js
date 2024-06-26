@@ -10,7 +10,7 @@ class PostController {
       next(err);
     }
   }
-  async getOnce(req, res, next) {
+  async getOne(req, res, next) {
     try {
       //!!!todo мрак переделать c одной стороны одна валидация, с другой хз ну я уже вынес валидацию!!!
       await validationHelpers.validatePostExists(

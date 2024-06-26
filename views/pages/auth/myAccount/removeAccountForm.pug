@@ -1,7 +1,7 @@
 section.removeAccount
 
     h2=`Удалить аккаунт:`
-    form(method="POST").form
+    form(method="POST" action="/user/remove").form
         .group
             label(for="email") Email 
             input(type="email" placeholder="myMail@ukr.net" name="email" required value=(formData && formData.email))

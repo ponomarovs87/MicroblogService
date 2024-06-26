@@ -1,0 +1,22 @@
+extends ../layouts/layout
+
+block content
+  if message
+    h1#error= message
+  else
+    h1#error="Ошибка сервера"
+
+  if errors
+    ul
+      each error, index in errors
+        li= error
+
+  if formData
+    p Данные формы:
+    pre= JSON.stringify(formData, null, 2)
+
+  if err
+    if err.stack
+      p= err.stack
+    if err.message
+      p= err.message

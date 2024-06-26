@@ -1,5 +1,5 @@
 div
-    form(method="POST").form
+    form(method="POST" id="userForm").form
         .group
             label(for="name") Name
             input(type="text" placeholder="Name" name="name" required value=(formData && formData.name))
@@ -45,4 +45,4 @@ div
                 each error in passwordErrors
                     p#error= error
 
-        button(type="submit") Save New User
+        button(type="submit" id="submitButton") Save New User

@@ -3,8 +3,8 @@ nav#navbar
   a(href="/myPosts") My Posts
   a(href="/adminPage") Admin page
   if !accessToken || accessToken.length < 0
-    a(href="/login") Login page 
-    a(href="/registrationPage")  Sign up (Register) page
+    a(href="/user/login") Login page 
+    a(href="/user/registration")  Sign up (Register) page
   else 
-    a(href="/myAccount") My Account
-    a(href="/logout") logout
+    a(href="/user/myAccount") My Account
+    a(href="/user/logout") logout
