@@ -4,13 +4,13 @@ const postService = require("../../service/post-service");
 const userRouter = require("./user-router");
 
 routesPug.get("/", async (req, res, next) => {
-  const { accessToken } = req.cookies;
+  const { refreshToken } = req.cookies;
   try {
     const posts = await postService.getAll();
 
     res.render(
       "pages/home/index",
-      { posts, accessToken },
+      { posts, refreshToken },
       (err, html) => {
         if (err) {
           return next(err);

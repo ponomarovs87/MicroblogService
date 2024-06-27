@@ -71,8 +71,32 @@ class UserController {
   }
   async edit(req, res, next) {
     try {
-      const data = await userService.edit(req.body);
-      return res.json(data);
+      if (req.body.newUserData.email !== req.body.email) {
+        const existingUser = await prisma.users.findUnique({
+          where: {
+            email: req.body.newUserData.email,
+          },
+        });
+        if (existingUser) {
+          throw apiError.BadRequest(
+            "Пользователь с таким адресом электронной почты уже существует",
+            {
+              email:
+                "Пользователь с таким адресом электронной почты уже существует",
+            },
+            req.body
+          );
+        }
+      }
+      const userData = await userService.edit(req.body);
+
+      res.cookie("refreshToken", userData.refreshToken, {
+        maxAge: config.cookie.refreshTokenMaxAge,
+        httpOnly: true,
+        secure: true,
+      });
+
+      return res.json(userData);
     } catch (err) {
       next(err);
     }

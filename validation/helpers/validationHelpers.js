@@ -42,14 +42,18 @@ class ValidationHelper {
   }
 
   formatValidationErrors(err) {
-    let errors = {};
-    err.inner.forEach((error) => {
-      if (!errors[error.path]) {
-        errors[error.path] = [];
-      }
-      errors[error.path].push(error.message);
-    });
-    return errors;
+    try {
+      let errors = {};
+      err.inner.forEach((error) => {
+        if (!errors[error.path]) {
+          errors[error.path] = [];
+        }
+        errors[error.path].push(error.message);
+      });
+      return errors;
+    } catch (error) {
+      return err;
+    }
   }
 }
 

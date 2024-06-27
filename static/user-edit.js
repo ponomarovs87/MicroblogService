@@ -5,22 +5,29 @@ import {
 } from "./helpers/dom-element-helpers.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  const registrationForm = document.getElementById(
-    "registrationForm"
-  );
+  const editForm = document.getElementById("editForm");
 
-  registrationForm.addEventListener("submit", function (e) {
+  editForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const formData = new FormData(registrationForm);
-    const formObject = {};
+    const formData = new FormData(editForm);
+    const formObject = {
+      email: formData.get("oldEmail"),
+      password: formData.get("oldPassword"),
+      newUserData: {},
+    };
 
-    formData.forEach((value, key) => {
-      formObject[key] = value;
-    });
+    formObject.newUserData.email = formData.get("email");
+    formObject.newUserData.password =
+      formData.get("password");
+    formObject.newUserData.surname =
+      formData.get("surname");
+    formObject.newUserData.name = formData.get("name");
+    formObject.newUserData.birthDate =
+      formData.get("birthDate");
 
-    fetch("/api/user/registration", {
-      method: "POST",
+    fetch("/api/user/edit", {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -49,18 +56,18 @@ document.addEventListener("DOMContentLoaded", function () {
             "p",
             "error-message general-error",
             error.message,
-            registrationForm
+            editForm
           );
         }
 
         if (error.errors) {
-          handleFormErrors(error, registrationForm);
+          handleFormErrors(error, editForm);
         } else {
           addElement(
             "p",
             "error-message general-error",
             "An error occurred. Please try again later.",
-            registrationForm
+            editForm
           );
         }
       });

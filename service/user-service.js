@@ -112,7 +112,19 @@ class UserService {
         ...data,
       },
     });
-    return updatedUser;
+    const tokens = tokenService.generateToken({
+      id: updatedUser.id,
+      email: updatedUser.email,
+    });
+    await tokenService.saveToken(
+      updatedUser.id,
+      tokens.refreshToken
+    );
+
+    return {
+      ...tokens,
+      updatedUser,
+    };
   }
   async delete(email) {
     await prisma.users.delete({

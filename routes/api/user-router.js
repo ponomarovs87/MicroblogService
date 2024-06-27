@@ -10,7 +10,7 @@ userRouterApi.post(
   userController.registration
 );
 
-userRouterApi.get("/login", userController.login);
+userRouterApi.post("/login", userController.login);
 userRouterApi.get("/logout", userController.logout);
 
 userRouterApi.put(

@@ -1,23 +1,23 @@
 section.registration
     form(id="registrationForm").form
-        .group
-            label(for="name") Name
-            input(type="text" placeholder="Name" name="name" required value=(formData && formData.name))
+        label(for="name").group
+            p Name
+            input(type="text" placeholder="Name" id="name" name="name" required value=(formData && formData.name))
 
-        .group
-            label(for="surname") Surname
-            input(type="text" placeholder="Surname" name="surname" required value=(formData && formData.surname))
+        label(for="surname").group
+            p Surname
+            input(type="text" placeholder="Surname" id="surname" name="surname" required value=(formData && formData.surname))
 
-        .group
-            label(for="birthDate") Birth Date 
-            input(type="date" placeholder="####" name="birthDate" required value=(formData && formData.birthDate))
+        label(for="birthDate").group
+            p Birth Date 
+            input(type="date" placeholder="####" id="birthDate" name="birthDate" required value=(formData && formData.birthDate))
 
-        .group
-            label(for="email") Email 
-            input(type="email" placeholder="myMail@ukr.net" name="email" required value=(formData && formData.email))
+        label(for="email").group
+            p Email 
+            input(type="email" placeholder="myMail@ukr.net" id="email" name="email" required value=(formData && formData.email))
 
-        .group
-            label(for="password") Password
-            input(type="password" placeholder="Password123" name="password" required)
+        label(for="password").group
+            p Password
+            input(type="password" placeholder="Password123" id="password" name="password" required)
 
         button(type="submit") Save New User

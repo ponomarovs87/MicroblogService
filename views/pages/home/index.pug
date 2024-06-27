@@ -4,10 +4,14 @@ block additionalStyles
     link(href="/home-styles.css" rel="stylesheet")
 
 block content
-    section.home
+    if errorMassage
+        p=errorMassage
+    section(id="homeSection").home
         section.posts
             h1.title Последние Посты: || Последние посты с тегом "название тега" :
             each post in posts
                 include ./partials/_post
         section.lateralBlock ДопБлок
             include ./partials/_lateral
+
+     

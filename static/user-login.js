@@ -1,25 +1,20 @@
-import {
-  removeAllElementsWithClass,
-  addElement,
-  handleFormErrors,
-} from "./helpers/dom-element-helpers.js";
+import { addElement, removeAllElementsWithClass } from "./helpers/dom-element-helpers.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  const registrationForm = document.getElementById(
-    "registrationForm"
-  );
+  const elementForm =
+    document.getElementById("loginForm");
 
-  registrationForm.addEventListener("submit", function (e) {
+  elementForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const formData = new FormData(registrationForm);
+    const formData = new FormData(elementForm);
     const formObject = {};
 
     formData.forEach((value, key) => {
       formObject[key] = value;
     });
 
-    fetch("/api/user/registration", {
+    fetch("/api/user/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
           "accessToken",
           data.accessToken
         );
+        
         window.location.href = "/";
       })
       .catch((error) => {
@@ -49,18 +45,18 @@ document.addEventListener("DOMContentLoaded", function () {
             "p",
             "error-message general-error",
             error.message,
-            registrationForm
+            elementForm
           );
         }
 
         if (error.errors) {
-          handleFormErrors(error, registrationForm);
+          handleFormErrors(error, elementForm);
         } else {
           addElement(
             "p",
             "error-message general-error",
             "An error occurred. Please try again later.",
-            registrationForm
+            elementForm
           );
         }
       });

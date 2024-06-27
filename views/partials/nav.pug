@@ -2,9 +2,9 @@ nav#navbar
   a(href="/") Home page
   a(href="/myPosts") My Posts
   a(href="/adminPage") Admin page
-  if !accessToken || accessToken.length < 0
+  if !refreshToken || refreshToken.length < 0
     a(href="/user/login") Login page 
     a(href="/user/registration")  Sign up (Register) page
   else 
     a(href="/user/myAccount") My Account
-    a(href="/user/logout") logout
+    button(id="logoutBtn") logout
