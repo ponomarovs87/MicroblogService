@@ -6,8 +6,9 @@ import {
 
 document.addEventListener("DOMContentLoaded", function () {
   const editForm = document.getElementById("editForm");
+  const removeForm = document.getElementById("removeForm");
 
-  editForm.addEventListener("submit", function (e) {
+  editForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
     const formData = new FormData(editForm);
@@ -68,6 +69,60 @@ document.addEventListener("DOMContentLoaded", function () {
             "error-message general-error",
             "An error occurred. Please try again later.",
             editForm
+          );
+        }
+      });
+  });
+  removeForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(removeForm);
+    const formObject = {
+      email: formData.get("email"),
+      password: formData.get("password"),
+    };
+
+    console.log(formObject);
+
+    fetch("/api/user/delete", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formObject),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((errorData) => {
+            throw errorData;
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        localStorage.removeItem("accessToken")
+        window.location.href = "/";
+      })
+      .catch((error) => {
+        removeAllElementsWithClass(".error-message");
+
+        if (error.message) {
+          addElement(
+            "p",
+            "error-message general-error",
+            error.message,
+            removeForm
+          );
+        }
+
+        if (error.errors) {
+          handleFormErrors(error, removeForm);
+        } else {
+          addElement(
+            "p",
+            "error-message general-error",
+            "An error occurred. Please try again later.",
+            removeForm
           );
         }
       });

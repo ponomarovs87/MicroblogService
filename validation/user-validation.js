@@ -41,6 +41,7 @@ class UserValidation {
     }
   }
   async accessValidation(req, _res, next) {
+    console.log();
     try {
       const { email, password } = req.body;
       const user = await prisma.users.findUnique({

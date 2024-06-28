@@ -3,8 +3,9 @@ const config = require("config");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const apiError = require("../exceptions/api-errors");
+const ApiError = require("../exceptions/api-errors");
 const userService = require("../service/user-service");
+const tokenService = require("../service/token-service");
 
 class UserController {
   async registration(req, res, next) {
@@ -15,7 +16,7 @@ class UserController {
         },
       });
       if (existingUser) {
-        throw apiError.BadRequest(
+        throw ApiError.BadRequest(
           "Пользователь с таким адресом электронной почты уже существует",
           {
             email:
@@ -58,7 +59,7 @@ class UserController {
         !req.cookies.refreshToken ||
         req.cookies.refreshToken === ""
       ) {
-        throw apiError.BadRequest("Выход уже выполнен");
+        throw ApiError.BadRequest("Выход уже выполнен");
       }
       const token = await userService.logout(
         req.cookies.refreshToken
@@ -71,6 +72,16 @@ class UserController {
   }
   async edit(req, res, next) {
     try {
+      const { refreshToken } = req.cookies;
+      const tokenData =
+        await tokenService.validateRefreshToken(
+          refreshToken
+        );
+      if (req.body.email !== tokenData.email) {
+        throw ApiError.Forbidden(
+          `Зайдите под аккаунтом ${req.body.email}`
+        );
+      }
       if (req.body.newUserData.email !== req.body.email) {
         const existingUser = await prisma.users.findUnique({
           where: {
@@ -78,7 +89,7 @@ class UserController {
           },
         });
         if (existingUser) {
-          throw apiError.BadRequest(
+          throw ApiError.BadRequest(
             "Пользователь с таким адресом электронной почты уже существует",
             {
               email:
@@ -103,6 +114,16 @@ class UserController {
   }
   async delete(req, res, next) {
     try {
+      const { refreshToken } = req.cookies;
+      const tokenData =
+        await tokenService.validateRefreshToken(
+          refreshToken
+        );
+      if (req.body.email !== tokenData.email) {
+        throw ApiError.Forbidden(
+          `Зайдите под аккаунтом ${req.body.email}`
+        );
+      }
       const data = await userService.delete(req.body.email);
       res.clearCookie("refreshToken");
       return res.json(data);

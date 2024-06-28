@@ -1,4 +1,4 @@
-const apiError = require("../exceptions/api-errors");
+const ApiError = require("../exceptions/api-errors");
 
 const validationHelper = require("./helpers/validationHelpers");
 const commentCreateSchema = require("./schema/commentCreateSchema");
@@ -25,7 +25,7 @@ class CommentValidation {
       const errors =
         validationHelper.formatValidationErrors(err);
 
-      next(apiError.ValidationError(errors, req.body));
+      next(ApiError.ValidationError(errors, req.body));
     }
   }
 

@@ -1,4 +1,4 @@
-const apiError = require("../../exceptions/api-errors");
+const ApiError = require("../../exceptions/api-errors");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
@@ -7,7 +7,7 @@ class ValidationHelper {
     const id = +postId;
 
     if (!id || isNaN(id)) {
-      throw apiError.BadRequest("Некоректний адрес поста");
+      throw ApiError.BadRequest("Некоректний адрес поста");
     }
 
     return id;
@@ -18,7 +18,7 @@ class ValidationHelper {
       where: { id: postId },
     });
     if (!data) {
-      throw apiError.NotFound("Такого поста не существует");
+      throw ApiError.NotFound("Такого поста не существует");
     }
     return data;
   }
@@ -28,7 +28,7 @@ class ValidationHelper {
       where: { id: commentId },
     });
     if (!data) {
-      throw apiError.NotFound(
+      throw ApiError.NotFound(
         "Такого комментария не существует"
       );
     }
@@ -37,7 +37,7 @@ class ValidationHelper {
 
   checkOwnership(postAuthorId, userId) {
     if (postAuthorId !== userId) {
-      throw apiError.Forbidden();
+      throw ApiError.Forbidden();
     }
   }
 

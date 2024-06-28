@@ -4,7 +4,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
 
-const apiError = require("../exceptions/api-errors");
+const ApiError = require("../exceptions/api-errors");
 const tokenService = require("./token-service");
 
 const { refreshToken } = require("../config/default");
@@ -55,7 +55,7 @@ class UserService {
       },
     });
     if (!user) {
-      throw apiError.BadRequest("Пользователь не найден", {
+      throw ApiError.BadRequest("Пользователь не найден", {
         email: "Пользователь не найден",
       });
     }
@@ -65,7 +65,7 @@ class UserService {
       user.hashPassword
     );
     if (!isPassEquals) {
-      throw apiError.BadRequest(`Неверный пароль`, {
+      throw ApiError.BadRequest(`Неверный пароль`, {
         password: `Неверный пароль`,
       });
     }
@@ -136,7 +136,7 @@ class UserService {
   }
   async refresh(refreshToken) {
     if (!refreshToken) {
-      throw apiError.UnauthorizedError();
+      throw ApiError.UnauthorizedError();
     }
     const userData =
       tokenService.validateRefreshToken(refreshToken);
@@ -144,7 +144,7 @@ class UserService {
       refreshToken
     );
     if (!userData || !tokenFromDB) {
-      throw apiError.UnauthorizedError();
+      throw ApiError.UnauthorizedError();
     }
 
     const user = await await prisma.users.findUnique({
