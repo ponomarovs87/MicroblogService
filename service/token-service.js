@@ -26,7 +26,7 @@ class TokenService {
         refreshToken,
       };
     } catch (err) {
-      console.log(err);
+      console.log(err); // todo убрать перед диплоем
     }
   }
   async saveToken(userId, refreshToken) {

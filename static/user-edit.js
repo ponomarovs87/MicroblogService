@@ -82,7 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
       password: formData.get("password"),
     };
 
-    console.log(formObject);
 
     fetch("/api/user/delete", {
       method: "DELETE",
