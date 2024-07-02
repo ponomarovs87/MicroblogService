@@ -82,7 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
       password: formData.get("password"),
     };
 
-
     fetch("/api/user/delete", {
       method: "DELETE",
       headers: {
@@ -99,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then((data) => {
-        localStorage.removeItem("accessToken")
+        localStorage.removeItem("accessToken");
         window.location.href = "/";
       })
       .catch((error) => {

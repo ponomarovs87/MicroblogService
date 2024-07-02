@@ -2,6 +2,7 @@ const express = require("express");
 const routesPug = express.Router();
 const postService = require("../../service/post-service");
 const userRouter = require("./user-router");
+const postsRouter = require("./posts-router");
 
 routesPug.get("/", async (req, res, next) => {
   const { refreshToken } = req.cookies;
@@ -22,8 +23,29 @@ routesPug.get("/", async (req, res, next) => {
     next(err);
   }
 });
+routesPug.get("/tag/:tagName", async (req, res) => {
+  const { refreshToken } = req.cookies;
+  const tag = req.params.tagName;
+  try {
+    const posts = await postService.getAllWithTag(tag);
+
+    res.render(
+      "pages/home/index",
+      { posts, refreshToken, tag },
+      (err, html) => {
+        if (err) {
+          return next(err);
+        }
+        res.send(html);
+      }
+    );
+  } catch (err) {
+    next(err);
+  }
+});
 
 routesPug.use("/user", userRouter);
+routesPug.use("/posts", postsRouter);
 
 //! временная заглушка Поменять!!!
 routesPug.get("/:page", (req, res) => {

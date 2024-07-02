@@ -143,15 +143,20 @@ class UserService {
     const tokenFromDB = await tokenService.fiendToken(
       refreshToken
     );
-    if (!userData || !tokenFromDB) {
+    if (!userData || !tokenFromDB || userData.id !== tokenFromDB.userId) {
+      res.clearCookie("refreshToken");
       throw ApiError.UnauthorizedError();
     }
 
-    const user = await await prisma.users.findUnique({
+    const user = await prisma.users.findUnique({
       where: {
         id: userData.id,
       },
     });
+    if (!user) {
+      res.clearCookie("refreshToken");
+      throw ApiError.UnauthorizedError();
+    }
     const tokens = tokenService.generateToken({
       id: user.id,
       email: user.email,

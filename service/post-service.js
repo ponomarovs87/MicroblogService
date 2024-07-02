@@ -15,13 +15,38 @@ class PostService {
     });
     return data;
   }
-  async getOnce(postId) {
+  async getAllWithTag(tag) {
+    const data = await prisma.posts.findMany({
+      where: {
+        tags: {
+          contains: tag,
+        },
+      },
+      include: {
+        comments: { include: { user: true } },
+        user: true,
+      },
+      orderBy: {
+        dateCreate: "desc",
+      },
+    });
+    return data;
+  }
+  async getOne(postId) {
     // todo доделать чтобы вместо(вдобавок прилетали данные юзера кто создал имя фамилия)
     const data = await prisma.posts.findUnique({
       where: {
         id: postId,
       },
-      include: { comments: true },
+      include: {
+        comments: {
+          include: { user: true },
+          orderBy: {
+            dateCreate: "desc",
+          },
+        },
+        user: true,
+      },
     });
     return data;
   }
@@ -34,7 +59,7 @@ class PostService {
     return data;
   }
   async edit(reqData) {
-    const { postId, newPostData } = reqData;
+    const { postId, ...newPostData } = reqData;
 
     const updatedUser = await prisma.posts.update({
       where: {

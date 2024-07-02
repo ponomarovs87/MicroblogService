@@ -11,7 +11,8 @@ block content
             h1.title Последние Посты: || Последние посты с тегом "название тега" :
             each post in posts
                 include ./partials/_post
-        section.lateralBlock ДопБлок
-            include ./partials/_lateral
+        if tag
+            section.lateralBlock
+                include ./partials/_lateral
 
      

@@ -38,7 +38,7 @@ model Posts {
   title        String
   tags         String? // хранение тегов как строки, разделенной запятыми
   markdownText String
-  dateCreate   DateTime @default(now())
+  dateCreate   DateTime  @default(now())
   dateUpdate   DateTime? @updatedAt
 
   comments Comments[]
@@ -51,6 +51,9 @@ model Comments {
   id Int @id @unique @default(autoincrement())
 
   context String
+
+  dateCreate DateTime  @default(now())
+  dateUpdate DateTime? @updatedAt
 
   postId Int // Внешний ключ, связывающий с моделью Posts
   post   Posts @relation(fields: [postId], references: [id], onDelete: Cascade) // Определение отношения с моделью Posts

@@ -1,4 +1,6 @@
 const express = require("express");
+const tokenService = require("../../service/token-service");
+const accessMiddleware = require("../../middleware/access-middleware");
 const userRouter = express.Router();
 
 userRouter.get("/registration", (_req, res) => {
@@ -17,35 +19,18 @@ userRouter.get("/login", (_req, res) => {
   }
 });
 
-userRouter.get("/myAccount", (req, res) => {
-  try {
-    const { refreshToken } = req.cookies;
-
-    if (refreshToken) {
-      return res.render("pages/auth/myAccount/index",{refreshToken});
-    } else {
-      return res.redirect("/")
+userRouter.get(
+  "/myAccount",
+  accessMiddleware,
+  (req, res) => {
+    try {
+      return res.render("pages/auth/myAccount/index", {
+        refreshToken: req.cookies.refreshToken,
+      });
+    } catch (err) {
+      next(err);
     }
-  } catch (err) {
-    next(err);
   }
-});
-
-// userRouter.post(
-//   "/edit",
-//   formDataParser,
-//   authMiddleware,
-//   userValidation.accessValidation,
-//   userValidation.userEditValidator,
-//   userController.edit
-// );
-
-// userRouter.post(
-//   "/remove",
-//   formDataParser,
-//   authMiddleware,
-//   userValidation.accessValidation,
-//   userController.remove
-// );
+);
 
 module.exports = userRouter;

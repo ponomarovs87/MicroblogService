@@ -4,5 +4,7 @@ block additionalStyles
     link(href="/auth-styles.css" rel="stylesheet")
 
 block content
+    if errorMessage 
+        p=errorMessage
     include loginForm
     script(type="module" src="/user-login.js") 

@@ -1,7 +1,10 @@
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
 const ApiError = require("../exceptions/api-errors");
 const tokenService = require("../service/token-service");
 
-module.exports = function (req, res, next) {
+module.exports = async function (req, res, next) {
   try {
     const authorizationHeader = req.headers.authorization;
     if (!authorizationHeader) {
@@ -16,7 +19,17 @@ module.exports = function (req, res, next) {
     if (!userData) {
       return next(ApiError.UnauthorizedError());
     }
-    //todo можно добавить проверку тот ли это юзер
+    const existingUser = await prisma.users.findUnique({
+      where: {
+        id: userData.id,
+      },
+    });
+
+    if (!existingUser || existingUser.email !== userData.email) {
+      res.clearCookie("refreshToken");
+      return next(ApiError.UnauthorizedError());
+    }
+
     req.user = userData;
     next();
   } catch (err) {

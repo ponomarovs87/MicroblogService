@@ -1,5 +1,5 @@
 div.postBlock
-    a.title(href=`/post/${post.id}`)
+    a.title(href=`/posts/${post.id}`)
         h2= post.title
     if post.tags.length >0
         div.postsTags 
@@ -22,7 +22,7 @@ div.postBlock
     div.postText
         if post.markdownText.length>150
             p= post.markdownText.substring(0, 150) + '...' 
-                a(href=`/post/${post.id}`) Продолжение
+                a(href=`/posts/${post.id}`) Продолжение
         else 
             p= post.markdownText
     div.commentsBlock
@@ -32,4 +32,4 @@ div.postBlock
                 div
                     h4= `${comment.user.name} ${comment.user.surname}`
                     p= comment.context
-        a(href=`/post/${post.id}`) Написать комментарий
+        a(href=`/posts/${post.id}#newCommentForm`) Написать комментарий

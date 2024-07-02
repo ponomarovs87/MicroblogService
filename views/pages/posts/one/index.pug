@@ -1,0 +1,26 @@
+extends ../../../layouts/layout
+
+block additionalStyles
+    link(href="/posts-styles.css" rel="stylesheet")
+
+block content
+    if !data
+        h1 Произошла ошибка
+    else 
+        h1= data.title
+        p= data.user.name 
+        p= data.user.surname
+        p= data.dateCreate 
+        if data.dateUpdate
+            p= data.dateUpdate
+        - var tagsArray = data.tags.split(',')
+        for tag in tagsArray
+            span=`#${tag} `
+        != data.parsedMarkdown
+        if data.client
+            include ../comments/addNewForm
+        if data.comments.length > 0
+            each comment in data.comments
+                include ../comments/one
+        if data.client
+            script(type="module" src="/comments/comment.js")

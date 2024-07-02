@@ -9,7 +9,7 @@ postRouterApi.get("/", postController.getAll);
 postRouterApi.get(
   "/:postId",
   postValidation.postIdValidation,
-  postController.getOnce
+  postController.getOne
 );
 postRouterApi.post(
   "/add",
