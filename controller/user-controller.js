@@ -32,7 +32,6 @@ class UserController {
       res.cookie("refreshToken", userData.refreshToken, {
         maxAge: config.cookie.refreshTokenMaxAge,
         httpOnly: true,
-        secure: true,
       });
 
       return res.status(201).json(userData);
@@ -46,7 +45,6 @@ class UserController {
       res.cookie("refreshToken", userData.refreshToken, {
         maxAge: config.cookie.refreshTokenMaxAge,
         httpOnly: true,
-        secure: true,
       });
       return res.status(200).json(userData);
     } catch (err) {
@@ -104,7 +102,6 @@ class UserController {
       res.cookie("refreshToken", userData.refreshToken, {
         maxAge: config.cookie.refreshTokenMaxAge,
         httpOnly: true,
-        secure: true,
       });
 
       return res.json(userData);
@@ -140,7 +137,6 @@ class UserController {
       res.cookie("refreshToken", userData.refreshToken, {
         maxAge: config.cookie.refreshTokenMaxAge,
         httpOnly: true,
-        secure: true,
       });
 
       return res.json(userData);
