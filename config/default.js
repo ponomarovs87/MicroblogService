@@ -14,7 +14,7 @@ module.exports = {
     port: process.env.SERVER_PORT || 3000,
   },
   bcrypt: {
-    salt: process.env.SALT || 3,
+    salt: +process.env.SALT || 3,
   },
   accessToken: {
     secret:
