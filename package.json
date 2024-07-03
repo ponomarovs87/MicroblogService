@@ -4,6 +4,7 @@
   "description": "final project",
   "main": "main.js",
   "scripts": {
+    "start":"node main.js",
     "dev": "nodemon --inspect main.js"
   },
   "repository": {
