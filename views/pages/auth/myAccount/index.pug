@@ -1,0 +1,11 @@
+extends ../../../layouts/layout
+
+block additionalStyles
+    link(href="/my-account-styles.css" rel="stylesheet")
+
+block content
+    if message
+    p#error= message
+    include editAccountForm
+    include removeAccountForm
+    script(type="module" src="/user-edit.js") 

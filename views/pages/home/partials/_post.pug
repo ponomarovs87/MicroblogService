@@ -1,0 +1,36 @@
+div.postBlock
+    a.title(href=`/posts/${post.id}`)
+        h2= post.title
+    if post.tags.length >0
+        div.postsTags 
+            span.title Tags:  
+            - var tags = post.tags.split(',')
+            each tag, tagIndex in tags
+                a(href=`/tag/${tag}`)
+                    span= `#${tag}`
+                if tagIndex < tags.length - 1
+    div.lateralInfo
+        div.authorInfo 
+            p=`автор :`
+            h3=post.user.name 
+            h3=post.user.surname 
+        div.technicalInfo 
+            if post.dateUpdate>post.dateCreate
+                p Изменено: #{new Date(post.dateUpdate).toLocaleDateString()}
+            else
+                p Создано: #{new Date(post.dateCreate).toLocaleDateString()}
+
+    div.postText
+        if post.markdownText.length>150
+            p= post.markdownText.substring(0, 150) + '...' 
+                a(href=`/posts/${post.id}`) Продолжение
+        else 
+            p= post.markdownText
+    div.commentsBlock
+        if post.comments.length
+            - var comments = post.comments.slice(-3).reverse()
+            each comment in comments
+                div
+                    h4= `${comment.user.name} ${comment.user.surname}`
+                    p= comment.context
+        a(href=`/posts/${post.id}#newCommentForm`) Написать комментарий

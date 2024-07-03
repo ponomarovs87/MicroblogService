@@ -1,0 +1,10 @@
+extends ../../../layouts/layout
+
+block additionalStyles
+    link(href="/login-styles.css" rel="stylesheet")
+
+block content
+    if errorMessage 
+        p.errorMessage=errorMessage
+    include loginForm
+    script(type="module" src="/user-login.js") 

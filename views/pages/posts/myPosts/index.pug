@@ -1,0 +1,29 @@
+extends ../../../layouts/layout
+
+block additionalStyles
+    link(href="/my-posts-styles.css" rel="stylesheet")
+
+block content
+    if !postsData
+        h1 Произошла ошибка
+    else 
+        table(id="mainTable").mainTable
+            thead
+                each headerItem in ["","Title", "Tags","Create","Update","Comments"]
+                    th(class=headerItem.toLowerCase())= headerItem
+            tbody
+                each postData in postsData
+                    tr
+                        td 
+                            a(href=`/posts/edit/${postData.id}`) edit 
+                            button(type="button" class="delete-button" data-id=`${postData.id}`) delete 
+                        td 
+                            a(href=`/posts/${postData.id}`)= postData.title
+                        td
+                            - var tagsArray = postData.tags.split(',')
+                            for tag in tagsArray
+                                p=tag
+                        td= postData.dateCreate
+                        td= postData.dateUpdate
+                        td= postData.comments.length
+        script(type="module" src="/posts/myPosts.js")

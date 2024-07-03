@@ -1,0 +1,21 @@
+extends ../../layouts/layout
+
+block additionalStyles
+    link(href="/home-styles.css" rel="stylesheet")
+
+block content
+    if errorMassage
+        p=errorMassage
+    section(id="homeSection").home
+        if tag
+            .title
+                h1=`Последние посты с тегом "${tag}" :`
+                a(href=`/`).buttonX X
+        else 
+            .title
+                h1=`Последние посты:`
+        section.posts
+            each post in posts
+                include ./partials/_post
+
+

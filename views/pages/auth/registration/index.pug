@@ -1,0 +1,8 @@
+extends ../../../layouts/layout
+
+block additionalStyles
+    link(href="/registration-styles.css" rel="stylesheet")
+
+block content
+    include registrationForm
+    script(type="module" src="/user-registration.js") 

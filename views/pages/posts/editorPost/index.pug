@@ -1,0 +1,66 @@
+extends ../../../layouts/layout
+
+block additionalStyles
+  link(href="/add-new-posts-styles.css" rel="stylesheet")
+  link(rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css")
+  style.
+    .input-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+    }
+    .tags-input {
+      display: flex;
+      flex-wrap: wrap;
+      border: 1px solid #ccc;
+      padding: 5px;
+      min-height: 40px;
+    }
+    .tags-input input {
+      border: none;
+      outline: none;
+      flex: 1;
+    }
+    .tag {
+      background: #007bff;
+      color: white;
+      padding: 5px 10px;
+      margin: 5px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+    .tag .remove-tag {
+      margin-left: 5px;
+      cursor: pointer;
+    }
+
+block content
+  if !data
+    h1 Новый пост
+  else 
+    h1 Изменение поста
+
+  form(id="addNewPostForm")
+    .input-group
+      label(for="title") Название
+      input#title(type="text" name="title" maxlength="150" placeholder="Введите название поста" value=data && data.title required)
+    .input-group
+      label(for="tags") Теги
+      .tags-input#tags-input
+        input(type="text" id="tags" name="tags" placeholder="Введите теги и нажимайте Enter или запятую" value=data && data.tags)
+    .input-group
+      label(for="markdownText") Текст поста
+      textarea#markdownText(name="markdownText" placeholder="Введите текст в формате Markdown")=data && data.markdownText
+    .input-group
+      button(type="submit")=data? "Сохранить изменения" : "Создать пост"
+  if data
+    script(type="module" src="/posts/edit.js")
+  else
+    script(type="module" src="/posts/addNew.js")

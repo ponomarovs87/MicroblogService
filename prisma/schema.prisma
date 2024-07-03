@@ -1,0 +1,63 @@
+//! команды bash сломан не помнит команды я тоже так что пусть живут тут 
+// npx prisma migrate dev 
+// npx prisma generate
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id           Int    @id @unique @default(autoincrement())
+  email        String @unique
+  hashPassword String
+  surname      String
+  name         String
+  birthDate    String
+
+  token    Token? // Один-к-одному отношение с Token
+  posts    Posts[]
+  comments Comments[]
+}
+
+model Token {
+  id Int @id @unique @default(autoincrement())
+
+  refreshToken String @unique
+
+  user   Users @relation(fields: [userId], references: [id], onDelete: Cascade) // Один-к-одному отношение с Users
+  userId Int   @unique // userId теперь уникален для каждого токена
+}
+
+model Posts {
+  id Int @id @unique @default(autoincrement())
+
+  title        String
+  tags         String? // хранение тегов как строки, разделенной запятыми
+  markdownText String
+  dateCreate   DateTime  @default(now())
+  dateUpdate   DateTime? @updatedAt
+
+  comments Comments[]
+
+  userId Int // Внешний ключ, связывающий с моделью Users
+  user   Users @relation(fields: [userId], references: [id], onDelete: Cascade) // Определение отношения с моделью Users
+}
+
+model Comments {
+  id Int @id @unique @default(autoincrement())
+
+  context String
+
+  dateCreate DateTime  @default(now())
+  dateUpdate DateTime? @updatedAt
+
+  postId Int // Внешний ключ, связывающий с моделью Posts
+  post   Posts @relation(fields: [postId], references: [id], onDelete: Cascade) // Определение отношения с моделью Posts
+
+  userId Int // Внешний ключ, связывающий с моделью Users
+  user   Users @relation(fields: [userId], references: [id], onDelete: Cascade) // Определение отношения с моделью Users
+}

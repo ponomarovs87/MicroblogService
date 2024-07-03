@@ -1,0 +1,67 @@
+body {
+  padding: 10px 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+body .errorMessage {
+  text-align: center;
+  color: red;
+}
+
+#navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #007bff;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+#navbar a {
+  font-size: 1rem;
+  color: #fff;
+  text-decoration: none;
+  margin-right: 2rem;
+  transition: color 0.3s;
+}
+
+#navbar a:hover {
+  color: #e3f2fd;
+}
+
+#navbar #logoutBtn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #dc3545;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#navbar #logoutBtn:hover {
+  background-color: #c82333;
+}
+
+#navbar a:last-child {
+  margin-right: 0;
+}
+
+@media (max-width: 768px) {
+  #navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  #navbar a {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+  #navbar a:last-child {
+    margin-bottom: 0;
+  }
+  #navbar #logoutBtn {
+    margin-top: 1rem;
+  }
+}
