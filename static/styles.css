@@ -2,112 +2,66 @@ body {
   padding: 10px 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
+body .errorMessage {
+  text-align: center;
+  color: red;
+}
 
 #navbar {
   display: flex;
-  padding: 1rem;
-  background-color: #f2f2f2;
-  border-bottom: 1px solid darkgray;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #007bff;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
 }
 
 #navbar a {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 0 1rem;
-  align-content: center;
-  flex-wrap: wrap;
-  text-align: center;
+  font-size: 1rem;
+  color: #fff;
+  text-decoration: none;
+  margin-right: 2rem;
+  transition: color 0.3s;
 }
 
-.header {
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
+#navbar a:hover {
+  color: #e3f2fd;
 }
 
-.header h2 {
-  margin-left: 40px;
+#navbar #logoutBtn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #dc3545;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-#root {
+#navbar #logoutBtn:hover {
+  background-color: #c82333;
 }
 
-.mainTable {
-  width: 100%;
-
-  margin-left: auto;
-  margin-right: auto;
-
-  border: 1px solid darkgray;
-  border-radius: 5px;
-
-  padding: 10px;
-
-  background-color: whitesmoke;
+#navbar a:last-child {
+  margin-right: 0;
 }
 
-.mainTable th {
-  text-align: left;
-}
-
-.mainTable th.id {
-  padding-right: 15px;
-}
-
-.mainTable th.title {
-  min-width: 230px;
-}
-
-.mainTable th.actions {
-  width: 130px;
-}
-
-a {
-  color: #0095d0;
-}
-
-.group {
-  padding: 5px;
-}
-
-.group input {
-  margin-left: 10px;
-}
-
-#error {
-  color: rgb(215, 14, 14);
-  margin: 10px 0;
-  text-align: center;
-}
-
-.padded {
-  padding: 10px 0;
-}
-
-.form div {
-  display: flex;
-  width: 100%;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: space-around;
-}
-.form div * {
-  width: 40%;
-}
-.form button {
-  width: 80%;
-  margin: 1em 0 0 0;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.allUsers {
-  margin-top: 1rem;
+@media (max-width: 768px) {
+  #navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  #navbar a {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+  #navbar a:last-child {
+    margin-bottom: 0;
+  }
+  #navbar #logoutBtn {
+    margin-top: 1rem;
+  }
 }

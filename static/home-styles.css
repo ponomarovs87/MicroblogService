@@ -1,53 +1,101 @@
-@charset "UTF-8";
-.home {
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: minmax(150px, 85%) minmax(50px, 10%);
-  column-gap: 5%;
+.home .title {
+  display: flex;
+  justify-content: center;
+  margin: 0.2em;
+  position: relative;
 }
-.home .posts {
-  display: grid;
-  grid-template-columns: repeat(4, auto);
-  column-gap: 10px;
-  row-gap: 10px;
-}
-.home .posts h1.title {
-  grid-column: 1/-1;
+.home .title h1 {
   font-size: 2rem;
+}
+.home .title .buttonX {
+  position: absolute;
+  right: 0.1em;
+  height: 90%;
+  width: 5%;
+  color: red;
   text-align: center;
+  line-height: 100%;
+  font-size: 5em;
+  font-weight: bold;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: solid 2px black;
+  border-radius: 20%;
+  box-shadow: 4px 4px 14px grey;
 }
-.home .posts div.postsTags {
-  grid-column: 1/-1;
-  text-align: center;
-  background-color: yellow;
+.home .title .buttonX:hover {
+  background-color: rgba(142, 142, 142, 0.504);
 }
-.home .posts .postBlock {
-  display: grid;
-  grid-template-columns: 30% 68%;
-  gap: 10px;
-  max-width: 290px;
+.home .postBlock {
+  border: 1px solid gray;
+  border-radius: 10px;
+  margin: 2em;
+  overflow: hidden;
+  padding: 0.7em;
 }
-.home .posts .postBlock .title {
+.home .postBlock .title h2 {
+  font-size: 2em;
+}
+.home .postBlock .postsTags {
+  position: relative;
+  font-size: 1.2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.home .postBlock .postsTags span.title {
+  position: absolute;
+  left: 0;
   margin: 0;
-  text-align: center;
+}
+.home .postBlock .postsTags a {
+  margin: 0 0.7em;
+}
+.home .postBlock .lateralInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.home .postBlock .lateralInfo .authorInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+.home .postBlock .lateralInfo .technicalInfo {
+  color: rgba(128, 128, 128, 0.5);
+}
+.home .postBlock .postText {
   width: 100%;
-  grid-column: 1/-1;
-  background-color: aqua;
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
-.home .posts .postBlock .lateralInfo {
-  background-color: aquamarine;
-}
-.home .posts .postBlock .postText {
-  background-color: blueviolet;
-}
-.home .posts .postBlock .postText p {
+.home .postBlock .postText p {
+  margin: 0;
+  padding: 1rem;
   word-wrap: break-word;
 }
-.home .posts .postBlock .commentsBlock {
-  background-color: cadetblue;
-  grid-column: 1/-1;
+.home .postBlock .commentsBlock div {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5rem;
+  height: 1rem;
+  font-size: 0.9rem;
 }
-.home .lateralBlock {
-  display: inline;
-  /* Стили для .lateralBlock */
+.home .postBlock .commentsBlock a {
+  display: block;
+  margin: 1rem auto 0 auto;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  transition: background-color 0.3s;
+}
+.home .postBlock .commentsBlock a:hover {
+  background-color: #0056b3;
 }

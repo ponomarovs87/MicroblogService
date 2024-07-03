@@ -37,7 +37,7 @@ export function handleFormErrors(error, registrationForm) {
       );
       if (input) {
         const errorElement = document.createElement("p");
-        errorElement.className = "error-message";
+        errorElement.className = "errorMessage";
         errorElement.textContent = errorMessage;
         input.parentNode.appendChild(errorElement);
       } else {

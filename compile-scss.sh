@@ -1,4 +1,5 @@
 #!/bin/bash
+# bash compile-scss.sh
 
 inputDir="scss"
 outputDir="static"
