@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./DB/microblog.db"
+  url      = env("DATABASE_URL")
 }
 
 model Users {
