@@ -45,6 +45,7 @@ class UserService {
         user,
       };
     } catch (err) {
+      console.log(err);
       next(err);
     }
   }

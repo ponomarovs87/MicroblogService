@@ -6,13 +6,15 @@ function calculateString(string) {
   return number;
 }
 
+console.log(process.env.SALT);
+
 module.exports = {
   server: {
     host: "http://localhost",
     port: process.env.SERVER_PORT || 3000,
   },
   bcrypt: {
-    salt: process.env.SALT || 3,
+    salt: +process.env.SALT || 3,
   },
   accessToken: {
     secret:
