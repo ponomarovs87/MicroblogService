@@ -55,12 +55,16 @@ class TokenService {
     return token;
   }
   async removeToken(refreshToken) {
-    const tokenData = await prisma.token.delete({
-      where: {
-        refreshToken,
-      },
-    });
-    return tokenData;
+    try {
+      const tokenData = await prisma.token.delete({
+        where: {
+          refreshToken,
+        },
+      });
+      return tokenData;
+    } catch (error) {
+      return error
+    }
   }
   validateRefreshToken(token) {
     try {

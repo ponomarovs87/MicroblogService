@@ -66,9 +66,12 @@ class UserService {
       user.hashPassword
     );
     if (!isPassEquals) {
-      throw ApiError.BadRequest(`Неверный пароль`, {
-        password: `Неверный пароль`,
-      });
+      throw ApiError.BadRequest(
+        `Неверный пароль или логин`,
+        {
+          password: `Неверный пароль или логин`,
+        }
+      );
     }
     const tokens = tokenService.generateToken({
       id: user.id,
@@ -135,7 +138,7 @@ class UserService {
     });
     return "success";
   }
-  async refresh(refreshToken) {
+  async refresh(response, refreshToken) {
     if (!refreshToken) {
       throw ApiError.UnauthorizedError();
     }
@@ -144,8 +147,12 @@ class UserService {
     const tokenFromDB = await tokenService.fiendToken(
       refreshToken
     );
-    if (!userData || !tokenFromDB || userData.id !== tokenFromDB.userId) {
-      res.clearCookie("refreshToken");
+    if (
+      !userData ||
+      !tokenFromDB ||
+      userData.id !== tokenFromDB.userId
+    ) {
+      response.clearCookie("refreshToken", { path: "/" });
       throw ApiError.UnauthorizedError();
     }
 
@@ -155,7 +162,7 @@ class UserService {
       },
     });
     if (!user) {
-      res.clearCookie("refreshToken");
+      res.clearCookie("refreshToken", { path: "/" });
       throw ApiError.UnauthorizedError();
     }
     const tokens = tokenService.generateToken({

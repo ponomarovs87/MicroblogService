@@ -62,7 +62,7 @@ class UserController {
       const token = await userService.logout(
         req.cookies.refreshToken
       );
-      res.clearCookie("refreshToken");
+      res.clearCookie("refreshToken", { path: "/" });
       res.json(token);
     } catch (err) {
       next(err);
@@ -122,7 +122,7 @@ class UserController {
         );
       }
       const data = await userService.delete(req.body.email);
-      res.clearCookie("refreshToken");
+      res.clearCookie("refreshToken", { path: "/" });
       return res.json(data);
     } catch (err) {
       next(err);
@@ -131,7 +131,7 @@ class UserController {
   async refresh(req, res, next) {
     try {
       const { refreshToken } = req.cookies;
-      const userData = await userService.refresh(
+      const userData = await userService.refresh(res,
         refreshToken
       );
       res.cookie("refreshToken", userData.refreshToken, {

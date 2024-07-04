@@ -25,8 +25,11 @@ module.exports = async function (req, res, next) {
       },
     });
 
-    if (!existingUser || existingUser.email !== userData.email) {
-      res.clearCookie("refreshToken");
+    if (
+      !existingUser ||
+      existingUser.email !== userData.email
+    ) {
+      res.clearCookie("refreshToken", { path: "/" });
       return next(ApiError.UnauthorizedError());
     }
 

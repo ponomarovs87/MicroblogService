@@ -6,6 +6,10 @@ body .errorMessage {
   text-align: center;
   color: red;
 }
+body .error-message {
+  text-align: center;
+  color: red;
+}
 
 #navbar {
   display: flex;

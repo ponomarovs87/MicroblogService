@@ -60,4 +60,11 @@ routesPug.get("/:page", (req, res) => {
   });
 });
 
+routesPug.use((err, req, res, next) => {
+  console.log(err); // todo убрать перед диплоем
+  return res
+    .status(500)
+    .json({ message: `непредвиденная ошибка` });
+});
+
 module.exports = routesPug;

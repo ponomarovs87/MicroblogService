@@ -6,8 +6,6 @@ function calculateString(string) {
   return number;
 }
 
-console.log(process.env.SALT);
-
 module.exports = {
   server: {
     host: "http://localhost",
