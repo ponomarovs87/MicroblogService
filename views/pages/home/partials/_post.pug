@@ -33,4 +33,5 @@ div.postBlock
                 div
                     h4= `${comment.user.name} ${comment.user.surname}`
                     p= comment.context
-        a(href=`/posts/${post.id}#newCommentForm`) Написать комментарий
+        if !refreshToken || refreshToken.length < 0
+            a(href=`/posts/${post.id}#newCommentForm`) Написать комментарий
