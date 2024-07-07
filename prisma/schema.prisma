@@ -18,6 +18,7 @@ model Users {
   surname      String
   name         String
   birthDate    String
+  role         String @default("User")
 
   token    Token? // Один-к-одному отношение с Token
   posts    Posts[]

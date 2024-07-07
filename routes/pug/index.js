@@ -3,15 +3,27 @@ const routesPug = express.Router();
 const postService = require("../../service/post-service");
 const userRouter = require("./user-router");
 const postsRouter = require("./posts-router");
+const {
+  validateRefreshToken,
+} = require("../../service/token-service");
+
+routesPug.use((req, _res, next) => {
+  req.additionally = {
+    userData: validateRefreshToken(
+      req.cookies.refreshToken
+    ),
+  };
+  next();
+});
 
 routesPug.get("/", async (req, res, next) => {
-  const { refreshToken } = req.cookies;
+  const { userData } = req.additionally;
   try {
     const posts = await postService.getAll();
 
     res.render(
       "pages/home/index",
-      { posts, refreshToken },
+      { posts, userData },
       (err, html) => {
         if (err) {
           return next(err);
@@ -24,14 +36,14 @@ routesPug.get("/", async (req, res, next) => {
   }
 });
 routesPug.get("/tag/:tagName", async (req, res) => {
-  const { refreshToken } = req.cookies;
+  const { userData } = req.additionally;
   const tag = req.params.tagName;
   try {
     const posts = await postService.getAllWithTag(tag);
 
     res.render(
       "pages/home/index",
-      { posts, refreshToken, tag },
+      { posts, userData, tag },
       (err, html) => {
         if (err) {
           return next(err);
@@ -64,7 +76,9 @@ routesPug.use((err, req, res, next) => {
   console.log(err); // todo убрать перед диплоем
   return res
     .status(500)
-    .json({ message: `непредвиденная ошибка` });
+    .json({
+      message: `непредвиденная ошибка ЭТО PUG ${err}`,
+    });
 });
 
 module.exports = routesPug;

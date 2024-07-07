@@ -4,7 +4,7 @@ div.postBlock
     if post.tags.length >0
         div.postsTags 
             span.title Tags:  
-            - var tags = post.tags.split(',')
+            - const tags = post.tags.split(',')
             each tag, tagIndex in tags
                 a(href=`/tag/${tag}`)
                     span= `#${tag}`
@@ -28,10 +28,10 @@ div.postBlock
             p= post.markdownText
     div.commentsBlock
         if post.comments.length
-            - var comments = post.comments.slice(-3).reverse()
+            - const comments = post.comments.slice(-3).reverse()
             each comment in comments
                 div
                     h4= `${comment.user.name} ${comment.user.surname}`
                     p= comment.context
-        if refreshToken && refreshToken.length > 0
+        if userData 
             a(href=`/posts/${post.id}#newCommentForm`) Написать комментарий

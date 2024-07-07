@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => {
         if (!response.ok) {
           return response.json().then((errorData) => {
+            debugger;
             throw errorData;
           });
         }
@@ -50,7 +51,10 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "/";
       })
       .catch((error) => {
-        removeAllElementsWithClass(".error-message",".errorMessage");
+        removeAllElementsWithClass(
+          ".error-message",
+          ".errorMessage"
+        );
 
         if (error.message) {
           addElement(

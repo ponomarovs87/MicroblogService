@@ -2,34 +2,36 @@ const express = require("express");
 const postRouterApi = express.Router();
 
 const postController = require("../../controller/post-controller");
-const authMiddleware = require("../../middleware/auth-middleware");
+const authMiddleware =
+  require("../../middleware/auth-middleware")();
 const postValidation = require("../../validation/post-validation");
 
 postRouterApi.get("/", postController.getAll);
-postRouterApi.get(
-  "/:postId",
-  postValidation.postIdValidation,
-  postController.getOne
-);
+
 postRouterApi.post(
   "/add",
   authMiddleware,
   postValidation.postCreateValidator,
   postController.add
 );
-postRouterApi.put(
-  "/:postId",
-  authMiddleware,
-  postValidation.postIdValidation,
-  postValidation.postEditValidator,
-  postController.edit
+
+postRouterApi.param(
+  "postId",
+  postValidation.postIdValidation
 );
-postRouterApi.delete(
-  "/:postId",
-  authMiddleware,
-  postValidation.postIdValidation,
-  postValidation.postDeleteValidator,
-  postController.delete
-);
+
+postRouterApi
+  .route("/:postId")
+  .get(postController.getOne)
+  .put(
+    authMiddleware,
+    postValidation.postEditValidator,
+    postController.edit
+  )
+  .delete(
+    authMiddleware,
+    postValidation.postDeleteValidator,
+    postController.delete
+  );
 
 module.exports = postRouterApi;

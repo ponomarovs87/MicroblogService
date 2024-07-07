@@ -1,6 +1,12 @@
+require("dotenv").config();
+const config = require("config");
+
 const express = require("express");
-const tokenService = require("../../service/token-service");
 const accessMiddleware = require("../../middleware/access-middleware");
+const adminService = require("../../service/admin-service");
+const commentService = require("../../service/comment-service");
+const postService = require("../../service/post-service");
+
 const userRouter = express.Router();
 
 userRouter.get("/registration", (_req, res) => {
@@ -21,12 +27,42 @@ userRouter.get("/login", (_req, res) => {
 
 userRouter.get(
   "/myAccount",
-  accessMiddleware,
+  accessMiddleware(),
   (req, res) => {
+    const { userData } = req.additionally;
     try {
       return res.render("pages/auth/myAccount/index", {
-        refreshToken: req.cookies.refreshToken,
+        userData,
       });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+userRouter.get(
+  "/adminPage",
+  accessMiddleware(true),
+  async (req, res, next) => {
+    try {
+      const { userData } = req.additionally;
+      const { role } = userData;
+      if (role !== config.role.adminRole) {
+        return res.redirect("/");
+      } else {
+        const usersData = await adminService.getAllUsers();
+        const postsData = await postService.getAll();
+        const commentsData = await commentService.getAll();
+
+        
+
+        return res.render("pages/adminPage", {
+          userData,
+          usersData,
+          postsData,
+          commentsData,
+        });
+      }
     } catch (err) {
       next(err);
     }

@@ -11,7 +11,8 @@
   color: #fff;
 }
 
-.mainTable th, .mainTable td {
+.mainTable th,
+.mainTable td {
   padding: 1rem;
   text-align: left;
   border: 1px solid #ddd;
@@ -23,6 +24,11 @@
 
 .mainTable td {
   font-size: 1rem;
+}
+.mainTable td.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
 }
 
 .mainTable tr:nth-child(even) {
@@ -50,6 +56,22 @@
   border-radius: 0.5rem;
   cursor: pointer;
   transition: background-color 0.3s;
+}
+
+.mainTable .edit-button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: green;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: auto;
+}
+
+.mainTable .edit-button:hover {
+  background-color: greenyellow;
 }
 
 .delete-button:hover {

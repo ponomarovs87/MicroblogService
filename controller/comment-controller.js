@@ -1,59 +1,49 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const commentService = require("../service/comment-service");
 
 class CommentController {
+
+  constructor() {
+    this.add = this.add.bind(this);
+    this.edit = this.edit.bind(this);
+    this.delete = this.delete.bind(this);
+  }
+
+  #createComment(req) {
+    return {
+      userId: req.user.id,
+      context: req.body.context,
+      postId: req.body.postId,
+    };
+  }
+
   async add(req, res, next) {
     try {
-      // todo возможно стоит сделать DTO
-
-      const comment = {
-        userId: req.user.id,
-        context: req.body.context,
-        postId: req.body.postId,
-      };
-
-      const data = await prisma.comments.create({
-        data: {
-          ...comment,
-        },
-      });
-
+      const comment = this.#createComment(req);
+      const data = await commentService.add(comment);
       res.send(data);
     } catch (err) {
       next(err);
     }
   }
+
   async edit(req, res, next) {
     try {
-      // todo возможно стоит сделать DTO #2 !!!
-
-      const comment = {
-        userId: req.user.id,
-        context: req.body.context,
-        postId: req.body.postId,
-      };
-
-      const data = await prisma.comments.update({
-        where: {
-          id: req.body.commentId,
-        },
-        data: {
-          ...comment,
-        },
-      });
-
+      const comment = this.#createComment(req);
+      const data = await commentService.edit(
+        req.body.commentId,
+        comment
+      );
       res.send(data);
     } catch (err) {
       next(err);
     }
   }
+
   async delete(req, res, next) {
     try {
-      const data = await prisma.comments.delete({
-        where: {
-          id: req.body.commentId,
-        },
-      });
+      const data = await commentService.delete(
+        req.body.commentId
+      );
       res.send(data);
     } catch (err) {
       next(err);

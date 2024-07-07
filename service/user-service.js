@@ -7,54 +7,57 @@ const bcrypt = require("bcrypt");
 const ApiError = require("../exceptions/api-errors");
 const tokenService = require("./token-service");
 
-const { refreshToken } = require("../config/default");
+const clearCookieRefreshToken = require("../helper/clearCookieRefreshToken");
 
 class UserService {
+  async #generateAndSaveTokens(user) {
+    const tokens = tokenService.generateToken({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    });
+    await tokenService.saveToken(
+      user.id,
+      tokens.refreshToken
+    );
+    return tokens;
+  }
+
+  async existingUser(email, fullData = false) {
+    const user = await prisma.users.findUnique({
+      where: { email },
+    });
+    return fullData ? user : !!user;
+  }
+
+  async checkRole(id) {
+    const user = await prisma.users.findUnique({
+      where: { id },
+    });
+    return user ? user.role : null;
+  }
+
   async registration(reqData) {
     const { password, ...rest } = reqData;
-
     try {
       const hashPassword = await bcrypt.hash(
         password,
         config.bcrypt.salt
       );
-
-      const data = {
-        ...rest,
-        hashPassword,
-      };
-
-      // Создание новой записи пользователя в базе данных
       const user = await prisma.users.create({
-        data: {
-          ...data,
-        },
+        data: { ...rest, hashPassword },
       });
 
-      const tokens = tokenService.generateToken({
-        id: user.id,
-        email: user.email,
-      });
-      await tokenService.saveToken(
-        user.id,
-        tokens.refreshToken
+      const tokens = await this.#generateAndSaveTokens(
+        user
       );
-
-      return {
-        ...tokens,
-        user,
-      };
+      return { ...tokens, user };
     } catch (err) {
-      console.log(err);
       next(err);
     }
   }
   async login({ password, email }) {
-    const user = await prisma.users.findUnique({
-      where: {
-        email,
-      },
-    });
+    const user = await this.existingUser(email, true);
     if (!user) {
       throw ApiError.BadRequest("Пользователь не найден", {
         email: "Пользователь не найден",
@@ -73,14 +76,7 @@ class UserService {
         }
       );
     }
-    const tokens = tokenService.generateToken({
-      id: user.id,
-      email: user.email,
-    });
-    await tokenService.saveToken(
-      user.id,
-      tokens.refreshToken
-    );
+    const tokens = await this.#generateAndSaveTokens(user);
 
     return {
       ...tokens,
@@ -88,10 +84,7 @@ class UserService {
     };
   }
   async logout(refreshToken) {
-    const token = await tokenService.removeToken(
-      refreshToken
-    );
-    return token;
+    return await tokenService.removeToken(refreshToken);
   }
   async edit(reqData) {
     const { email, newUserData } = reqData;
@@ -103,40 +96,26 @@ class UserService {
       config.bcrypt.salt
     );
 
-    const data = {
-      ...rest,
-      hashPassword,
-    };
-
     const updatedUser = await prisma.users.update({
       where: {
         email,
       },
       data: {
-        ...data,
+        ...rest,
+        hashPassword,
       },
     });
-    const tokens = tokenService.generateToken({
-      id: updatedUser.id,
-      email: updatedUser.email,
-    });
-    await tokenService.saveToken(
-      updatedUser.id,
-      tokens.refreshToken
+    const tokens = await this.#generateAndSaveTokens(
+      updatedUser
     );
-
-    return {
-      ...tokens,
-      updatedUser,
-    };
+    return { ...tokens, updatedUser };
   }
   async delete(email) {
-    await prisma.users.delete({
+    return await prisma.users.delete({
       where: {
         email,
       },
     });
-    return "success";
   }
   async refresh(response, refreshToken) {
     if (!refreshToken) {
@@ -152,7 +131,7 @@ class UserService {
       !tokenFromDB ||
       userData.id !== tokenFromDB.userId
     ) {
-      response.clearCookie("refreshToken", { path: "/" });
+      clearCookieRefreshToken(response);
       throw ApiError.UnauthorizedError();
     }
 
@@ -162,23 +141,11 @@ class UserService {
       },
     });
     if (!user) {
-      res.clearCookie("refreshToken", { path: "/" });
+      clearCookieRefreshToken(response);
       throw ApiError.UnauthorizedError();
     }
-    const tokens = tokenService.generateToken({
-      id: user.id,
-      email: user.email,
-    });
-
-    await tokenService.saveToken(
-      user.id,
-      tokens.refreshToken
-    );
-
-    return {
-      ...tokens,
-      user,
-    };
+    const tokens = await this.#generateAndSaveTokens(user);
+    return { ...tokens, user };
   }
 }
 
