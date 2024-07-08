@@ -14,8 +14,8 @@ block content
             tbody
                 each postData in postsData
                     tr
-                        td 
-                            a(href=`/posts/edit/${postData.id}`) edit 
+                        td.buttons 
+                            a(href=`/posts/edit/${postData.id}`).edit-button edit 
                             button(type="button" class="delete-button" data-id=`${postData.id}`) delete 
                         td 
                             a(href=`/posts/${postData.id}`)= postData.title

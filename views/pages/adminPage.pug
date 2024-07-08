@@ -1,4 +1,67 @@
 extends ../layouts/layout
 
+block additionalStyles
+    link(href="/my-posts-styles.css" rel="stylesheet")
+
 block content
-    h1 adminPage
+    if usersData && usersData.length > 0
+        h2 Пользователи:
+        table(id="usersTable").mainTable
+            thead
+                each headerItem in ["","id","User name", "User surname","email","Birth date","Role","Posts create","Comments create"]
+                    th(class=headerItem.toLowerCase())= headerItem
+            tbody
+                each userData in usersData
+                    tr(id=`user_${userData.id}`)
+                        td.buttons 
+                            button(type="button" class="delete-button" data-id=`${userData.id}`) delete
+                            button(type="button" class="edit-button" data-id=`${userData.id}` ) switch Role
+                        td=userData.id 
+                        td=userData.name
+                        td=userData.surname
+                        td=userData.email
+                        td=userData.birthDate
+                        td(id=`user_${userData.id}_role`)=userData.role
+                        td=userData._count.posts
+                        td=userData._count.comments
+    if postsData && postsData.length > 0
+        h2 Статьи:
+        table(id="postsTable").mainTable
+            thead
+                each headerItem in ["","id","title", "markdownText.length","tags","dateCreate","dateUpdate","userId","comments.length"]
+                    th(class=headerItem.toLowerCase())= headerItem
+            tbody
+                each postData in postsData
+                    tr(id=`post_${postData.id}`)
+                        td 
+                            button(type="button" class="delete-button" data-id=`${postData.id}`) delete 
+                        td=postData.id
+                        td=postData.title
+                        td=postData.markdownText.length
+                        td=postData.tags
+                        td=postData.dateCreate
+                        td=postData.dateUpdate
+                        td=postData.userId
+                        td=postData.comments.length
+
+    if commentsData && commentsData.length > 0
+        h2 Комментарии:
+        table(id="commentsTable").mainTable
+            thead
+                each headerItem in ["","id", "context","dateCreate","dateUpdate","userId","postId"]
+                    th(class=headerItem.toLowerCase())= headerItem
+            tbody
+                each commentData in commentsData
+                    tr(id=`comment_${commentData.id}`)
+                        td 
+                            button(type="button" class="delete-button" data-id=`${commentData.id}`) delete 
+                        td=commentData.id
+                        td=commentData.context
+                        td=commentData.dateCreate
+                        td=commentData.dateUpdate
+                        td=commentData.userId
+                        td=commentData.postId
+
+    script(type="module" src="/admin/adminFetch.js")
+
+

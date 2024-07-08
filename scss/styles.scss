@@ -1,71 +1,133 @@
 body {
-    padding: 10px 50px;
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-    .errorMessage{
-        text-align: center;
-        color: red;
-    }
+  padding: 10px 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: #333; // Цвет текста по умолчанию для лучшей читаемости
+
+  .errorMessage,
+  .error-message {
+    text-align: center;
+    color: red;
   }
 
-#navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #007bff;
-    padding: 1rem 2rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
+  @media (max-width: 768px) {
+    padding: 10px 30px; // Уменьшены отступы на средних устройствах
   }
-  
-  #navbar a {
-    font-size: 1rem;
+
+  @media (max-width: 500px) {
+    padding: 10px; // Уменьшены отступы для мобильных устройств
+    font-size: 1rem; // Увеличен размер шрифта для мобильных устройств
+
+    .errorMessage,
+    .error-message {
+      font-size: 1.2rem; // Увеличен размер шрифта для сообщений об ошибках
+    }
+  }
+}
+
+#navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #007bff;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+
+  a {
+    font-size: 1.1rem;
     color: #fff;
     text-decoration: none;
     margin-right: 2rem;
     transition: color 0.3s;
+
+    &:hover {
+      color: #e3f2fd;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
-  
-  #navbar a:hover {
-    color: #e3f2fd;
-  }
-  
-  #navbar #logoutBtn {
+
+  #logoutBtn {
     padding: 0.75rem 1.5rem;
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: #fff;
     background-color: #dc3545;
     border: none;
     border-radius: 0.5rem;
     cursor: pointer;
     transition: background-color 0.3s;
-  }
-  
-  #navbar #logoutBtn:hover {
-    background-color: #c82333;
-  }
-  
-  #navbar a:last-child {
-    margin-right: 0;
-  }
-  
-  @media (max-width: 768px) {
-    #navbar {
-      flex-direction: column;
-      align-items: flex-start;
+
+    &:hover {
+      background-color: #c82333;
     }
-  
-    #navbar a {
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem; // Уменьшены отступы
+
+    a {
+      font-size: 1rem;
       margin-right: 0;
       margin-bottom: 0.5rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
-  
-    #navbar a:last-child {
-      margin-bottom: 0;
-    }
-  
-    #navbar #logoutBtn {
+
+    #logoutBtn {
       margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
     }
   }
-  
+
+  @media (max-width: 500px) {
+    // Мобильная версия
+    flex-direction: column;
+    align-items: stretch; // Занимать всю ширину
+    padding: 0;
+    background-color: unset;
+
+    a {
+      display: block;
+      padding: 1rem;
+      font-size: 1.5rem; // Большой размер шрифта
+      text-align: center;
+      color: #fff;
+      background-color: #0056b3; // Темно-синий цвет фона
+      border: 1px solid #004494; // Темно-синий цвет границы
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem; // Отступ между элементами
+
+      &:hover {
+        background-color: #003d7a; // Еще более темный синий при наведении
+        border-color: #002d56; // Темно-синий цвет границы при наведении
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    #logoutBtn {
+      margin-top: 1rem;
+      padding: 1rem;
+      font-size: 1.5rem; // Большой размер шрифта
+      color: #fff;
+      background-color: #dc3545;
+      border: 1px solid #c82333; // Цвет границы для кнопки выхода
+      border-radius: 0.5rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #c82333;
+      }
+    }
+  }
+}

@@ -17,10 +17,10 @@ block content
         for tag in tagsArray
             span=`#${tag} `
         != data.parsedMarkdown
-        if data.client
+        if userData
             include ../comments/addNewForm
         if data.comments.length > 0
             each comment in data.comments
                 include ../comments/one
-        if data.client
+        if userData
             script(type="module" src="/comments/comment.js")

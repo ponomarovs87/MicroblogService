@@ -6,26 +6,25 @@ const commentValidation = require("../../validation/comment-validation");
 const commentController = require("../../controller/comment-controller");
 const postValidation = require("../../validation/post-validation");
 
-commentsRouterApi.post(
-  "/:postId",
-  authMiddleware,
-  postValidation.postIdValidation,
-  commentValidation.commentCreateValidator,
-  commentController.add
+commentsRouterApi.use(authMiddleware());
+
+commentsRouterApi.param(
+  "postId",
+  postValidation.postIdValidation
 );
-commentsRouterApi.put(
-  "/:postId",
-  authMiddleware,
-  postValidation.postIdValidation,
-  commentValidation.commentEditValidator,
-  commentController.edit
-);
-commentsRouterApi.delete(
-  "/:postId",
-  authMiddleware,
-  postValidation.postIdValidation,
-  commentValidation.commentDeleteValidator,
-  commentController.delete
-);
+
+commentsRouterApi.route("/:postId")
+  .post(
+    commentValidation.commentCreateValidator,
+    commentController.add
+  )
+  .put(
+    commentValidation.commentEditValidator,
+    commentController.edit
+  )
+  .delete(
+    commentValidation.commentDeleteValidator,
+    commentController.delete
+  );
 
 module.exports = commentsRouterApi;

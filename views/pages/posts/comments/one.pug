@@ -3,7 +3,7 @@ div(id=`comment${comment.id}`).commentBlock
     span=comment.user.name 
     span=comment.user.surname
     span=`создан: ${comment.dateCreate}`
-    if data.client && comment.user.id === data.client.id
+    if userData && comment.user.id === userData.id
         button(id=`editComment` data-id=`${comment.id}`) изменить
         button(id=`removeComment` data-id=`${comment.id}` ) удалить
     h3=comment.context

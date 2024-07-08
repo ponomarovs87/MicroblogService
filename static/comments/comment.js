@@ -86,6 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
           )
             .then((data) => {
+              removeAllElementsWithClass(".error-message");
               button.textContent = lastContextButton;
               h3Element.textContent = data.context;
               commentDiv.replaceChild(
@@ -105,6 +106,13 @@ document.addEventListener("DOMContentLoaded", function () {
               if (error.errors) {
                 handleFormErrors(error, commentDiv);
               }
+              button.addEventListener(
+                "click",
+                saveComment,
+                {
+                  once: true,
+                }
+              );
             });
         } else {
           button.textContent = lastContextButton;
@@ -114,6 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
           });
         }
       }
+
       button.addEventListener("click", editComment, {
         once: true,
       });

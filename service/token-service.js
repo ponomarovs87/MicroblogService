@@ -6,28 +6,24 @@ const prisma = new PrismaClient();
 
 class TokenService {
   generateToken(payload) {
-    try {
-      const accessToken = jwt.sign(
-        payload,
-        config.accessToken.secret,
-        {
-          expiresIn: config.accessToken.expiresIn,
-        }
-      );
-      const refreshToken = jwt.sign(
-        payload,
-        config.refreshToken.secret,
-        {
-          expiresIn: config.refreshToken.expiresIn,
-        }
-      );
-      return {
-        accessToken,
-        refreshToken,
-      };
-    } catch (err) {
-      console.log(err); // todo убрать перед диплоем
-    }
+    const accessToken = jwt.sign(
+      payload,
+      config.accessToken.secret,
+      {
+        expiresIn: config.accessToken.expiresIn,
+      }
+    );
+    const refreshToken = jwt.sign(
+      payload,
+      config.refreshToken.secret,
+      {
+        expiresIn: config.refreshToken.expiresIn,
+      }
+    );
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
   async saveToken(userId, refreshToken) {
     const tokenData = await prisma.token.findUnique({
@@ -46,51 +42,44 @@ class TokenService {
         },
       });
     }
-    const token = await prisma.token.create({
+    return await prisma.token.create({
       data: {
         userId,
         refreshToken,
       },
     });
-    return token;
   }
   async removeToken(refreshToken) {
-    const tokenData = await prisma.token.delete({
-      where: {
-        refreshToken,
-      },
-    });
-    return tokenData;
+    try {
+      return await prisma.token.delete({
+        where: {
+          refreshToken,
+        },
+      });
+    } catch (error) {
+      return error;
+    }
   }
   validateRefreshToken(token) {
     try {
-      const tokenData = jwt.verify(
-        token,
-        config.refreshToken.secret
-      );
-      return tokenData;
+      return jwt.verify(token, config.refreshToken.secret);
     } catch (err) {
       return null;
     }
   }
   validateAccessToken(token) {
     try {
-      const tokenData = jwt.verify(
-        token,
-        config.accessToken.secret
-      );
-      return tokenData;
+      return jwt.verify(token, config.accessToken.secret);
     } catch (err) {
       return null;
     }
   }
   async fiendToken(refreshToken) {
-    const tokenData = await prisma.token.findUnique({
+    return await prisma.token.findUnique({
       where: {
         refreshToken,
       },
     });
-    return tokenData;
   }
 }
 

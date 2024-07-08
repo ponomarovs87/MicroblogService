@@ -50,7 +50,10 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "/";
       })
       .catch((error) => {
-        removeAllElementsWithClass(".error-message");
+        removeAllElementsWithClass(
+          ".error-message",
+          ".errorMessage"
+        );
 
         if (error.message) {
           addElement(

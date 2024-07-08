@@ -18,7 +18,6 @@ class UserValidation {
       const errors =
         validationHelpers.formatValidationErrors(err);
 
-      //todo переделать в ApiError хз придумаю позже выглядит мрак
       next(ApiError.ValidationError(errors, req.body));
     }
   }

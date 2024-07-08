@@ -1,83 +1,107 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+const dtoService = require("./dto-service");
+
 class PostService {
-  async getAll() {
-    //!!!! ДОБАВИТЬ DTO оооочень надо
+  constructor() {
+    this.getAll = this.getAll.bind(this);
+    this.getAllWithTag = this.getAllWithTag.bind(this);
+    this.getOne = this.getOne.bind(this);
+    this.add = this.add.bind(this);
+    this.edit = this.edit.bind(this);
+    this.delete = this.delete.bind(this);
+  }
+
+  async #getPosts(where, orderBy) {
     const data = await prisma.posts.findMany({
+      where,
       include: {
         comments: { include: { user: true } },
         user: true,
       },
       orderBy: {
-        dateCreate: "desc",
+        dateCreate: orderBy,
       },
     });
-    return data;
+
+    const answer = this.#mapDataDTOs(data);
+
+    return answer;
   }
-  async getAllWithTag(tag) {
-    const data = await prisma.posts.findMany({
-      where: {
-        tags: {
-          contains: tag,
-        },
-      },
-      include: {
-        comments: { include: { user: true } },
-        user: true,
-      },
-      orderBy: {
-        dateCreate: "desc",
-      },
-    });
-    return data;
-  }
-  async getOne(postId) {
-    // todo доделать чтобы вместо(вдобавок прилетали данные юзера кто создал имя фамилия)
+
+  async #getPostById(postId) {
     const data = await prisma.posts.findUnique({
-      where: {
-        id: postId,
-      },
+      where: { id: postId },
       include: {
         comments: {
           include: { user: true },
-          orderBy: {
-            dateCreate: "desc",
-          },
+          orderBy: { dateCreate: "desc" },
         },
         user: true,
       },
     });
-    return data;
+
+    if (!data) return null;
+
+    return this.#mapDataDTO(data);
   }
-  async add(newPostData) {
-    const data = await prisma.posts.create({
-      data: {
-        ...newPostData,
-      },
+
+  #mapDataDTOs(data) {
+    return data.map((item) => this.#mapDataDTO(item));
+  }
+
+  #mapDataDTO(data) {
+    data.user = dtoService.clearUserData(data.user);
+    data.comments = data.comments.map((comment) => {
+      comment.user = dtoService.clearUserData(comment.user);
+      return comment;
     });
     return data;
   }
+
+  async getAll() {
+    return await this.#getPosts({}, "desc");
+  }
+
+  async getAllByUserId(userId) {
+    return await this.#getPosts(
+      {
+        userId,
+      },
+      "desc"
+    );
+  }
+
+  async getAllWithTag(tag) {
+    return await this.#getPosts(
+      { tags: { contains: tag } },
+      "desc"
+    );
+  }
+
+  async getOne(postId) {
+    return await this.#getPostById(postId);
+  }
+
+  async add(newPostData) {
+    return await prisma.posts.create({
+      data: newPostData,
+    });
+  }
+
   async edit(reqData) {
     const { postId, ...newPostData } = reqData;
-
-    const updatedUser = await prisma.posts.update({
-      where: {
-        id: postId,
-      },
-      data: {
-        ...newPostData,
-      },
+    return await prisma.posts.update({
+      where: { id: postId },
+      data: newPostData,
     });
-    return updatedUser;
   }
+
   async delete(postId) {
-    const updatedUser = await prisma.posts.delete({
-      where: {
-        id: postId,
-      },
+    return await prisma.posts.delete({
+      where: { id: postId },
     });
-    return updatedUser;
   }
 }
 

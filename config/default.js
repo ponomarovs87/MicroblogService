@@ -1,12 +1,4 @@
-function calculateString(string) {
-  let number = eval(string);
-  if (isNaN(number)) {
-    number = null;
-  }
-  return number;
-}
-
-console.log(process.env.SALT);
+const calculateString = require("../helper/calculateString");
 
 module.exports = {
   server: {
@@ -19,13 +11,19 @@ module.exports = {
   accessToken: {
     secret:
       process.env.JWT_ACCESS_SECRET || "jwtSecretStrong",
-    expiresIn: "15s",
+    expiresIn:
+      calculateString(
+        process.env.COOKIE_REFRESH_TOKEN_MAX_AGE
+      ) || "15s",
   },
   refreshToken: {
     secret:
       process.env.JWT_REFRESH_SECRET ||
       "jwtRefreshSecretStrong",
-    expiresIn: "30d",
+    expiresIn:
+      calculateString(
+        process.env.COOKIE_REFRESH_TOKEN_MAX_AGE
+      ) || "30d",
   },
   cookie: {
     refreshTokenMaxAge:
@@ -36,5 +34,9 @@ module.exports = {
       calculateString(
         process.env.COOKIE_REFRESH_TOKEN_MAX_AGE
       ) || 24 * 60 * 60 * 1000,
+  },
+  role: {
+    adminRole: process.env.ADMIN_ROLE || "Admin",
+    userRole: "User",
   },
 };

@@ -1,10 +1,27 @@
 body {
   padding: 10px 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: #333;
 }
-body .errorMessage {
+body .errorMessage,
+body .error-message {
   text-align: center;
   color: red;
+}
+@media (max-width: 768px) {
+  body {
+    padding: 10px 30px;
+  }
+}
+@media (max-width: 500px) {
+  body {
+    padding: 10px;
+    font-size: 1rem;
+  }
+  body .errorMessage,
+  body .error-message {
+    font-size: 1.2rem;
+  }
 }
 
 #navbar {
@@ -17,22 +34,22 @@ body .errorMessage {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
 }
-
 #navbar a {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #fff;
   text-decoration: none;
   margin-right: 2rem;
   transition: color 0.3s;
 }
-
 #navbar a:hover {
   color: #e3f2fd;
 }
-
+#navbar a:last-child {
+  margin-right: 0;
+}
 #navbar #logoutBtn {
   padding: 0.75rem 1.5rem;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #fff;
   background-color: #dc3545;
   border: none;
@@ -40,21 +57,17 @@ body .errorMessage {
   cursor: pointer;
   transition: background-color 0.3s;
 }
-
 #navbar #logoutBtn:hover {
   background-color: #c82333;
 }
-
-#navbar a:last-child {
-  margin-right: 0;
-}
-
 @media (max-width: 768px) {
   #navbar {
     flex-direction: column;
     align-items: flex-start;
+    padding: 1rem;
   }
   #navbar a {
+    font-size: 1rem;
     margin-right: 0;
     margin-bottom: 0.5rem;
   }
@@ -63,5 +76,46 @@ body .errorMessage {
   }
   #navbar #logoutBtn {
     margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
+}
+@media (max-width: 500px) {
+  #navbar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    background-color: unset;
+  }
+  #navbar a {
+    display: block;
+    padding: 1rem;
+    font-size: 1.5rem;
+    text-align: center;
+    color: #fff;
+    background-color: #0056b3;
+    border: 1px solid #004494;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  #navbar a:hover {
+    background-color: #003d7a;
+    border-color: #002d56;
+  }
+  #navbar a:last-child {
+    margin-bottom: 0;
+  }
+  #navbar #logoutBtn {
+    margin-top: 1rem;
+    padding: 1rem;
+    font-size: 1.5rem;
+    color: #fff;
+    background-color: #dc3545;
+    border: 1px solid #c82333;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+  #navbar #logoutBtn:hover {
+    background-color: #c82333;
   }
 }

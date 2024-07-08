@@ -17,7 +17,7 @@ export async function makeRequest(
   });
 
   if (response.status === 401) {
-    await refresh("/login");
+    await refresh("/user/login");
     return makeRequest(method, http, formObject);
   }
 

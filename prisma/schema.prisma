@@ -1,4 +1,5 @@
 //! команды bash сломан не помнит команды я тоже так что пусть живут тут 
+// npx prisma migrate dev --name init
 // npx prisma migrate dev 
 // npx prisma generate
 generator client {
@@ -6,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -17,6 +18,7 @@ model Users {
   surname      String
   name         String
   birthDate    String
+  role         String @default("User")
 
   token    Token? // Один-к-одному отношение с Token
   posts    Posts[]

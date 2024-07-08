@@ -1,7 +1,9 @@
-export function removeAllElementsWithClass(className) {
-  return document
-    .querySelectorAll(className)
-    .forEach((el) => el.remove());
+export function removeAllElementsWithClass(...classNames) {
+  return classNames.forEach((className) => {
+    document
+      .querySelectorAll(`${className}`)
+      .forEach((el) => el.remove());
+  });
 }
 
 export function addElement(
@@ -16,19 +18,11 @@ export function addElement(
   prependToElement.prepend(generalElement);
 }
 
-export function handleFormErrors(error, registrationForm) {
-  //! еще не решил может и не надо
-  // if (error.reqData) {
-  //   for (const key in error.reqData) {
-  //     const input = registrationForm.querySelector(
-  //       `[name="${key}"]`
-  //     );
-  //     if (input) {
-  //       input.value = error.reqData[key];
-  //     }
-  //   }
-  // }
-
+export function handleFormErrors(
+  error,
+  registrationForm,
+  errorClass = "error-message"
+) {
   if (error.errors) {
     for (const key in error.errors) {
       const errorMessage = error.errors[key].join(", ");
@@ -37,7 +31,7 @@ export function handleFormErrors(error, registrationForm) {
       );
       if (input) {
         const errorElement = document.createElement("p");
-        errorElement.className = "errorMessage";
+        errorElement.className = errorClass;
         errorElement.textContent = errorMessage;
         input.parentNode.appendChild(errorElement);
       } else {

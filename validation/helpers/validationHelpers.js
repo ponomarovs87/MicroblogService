@@ -3,11 +3,14 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 class ValidationHelper {
-  paramsWayNumberValidation(postId) {
+  paramsWayNumberValidation(
+    postId,
+    errorMessage = "Некоректний адрес поста"
+  ) {
     const id = +postId;
 
     if (!id || isNaN(id)) {
-      throw ApiError.BadRequest("Некоректний адрес поста");
+      throw ApiError.BadRequest(errorMessage);
     }
 
     return id;

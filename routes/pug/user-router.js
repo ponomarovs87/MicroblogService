@@ -1,36 +1,26 @@
 const express = require("express");
-const tokenService = require("../../service/token-service");
 const accessMiddleware = require("../../middleware/access-middleware");
+const renderController = require("../../controller/pages/render-controller");
+
 const userRouter = express.Router();
 
-userRouter.get("/registration", (_req, res) => {
-  try {
-    return res.render("pages/auth/registration/index");
-  } catch (err) {
-    next(err);
-  }
-});
+userRouter.get(
+  "/registration",
+  renderController.renderRegistrationPage
+);
 
-userRouter.get("/login", (_req, res) => {
-  try {
-    return res.render("pages/auth/login/index");
-  } catch (err) {
-    next(err);
-  }
-});
+userRouter.get("/login", renderController.renderLoginPage);
 
 userRouter.get(
   "/myAccount",
-  accessMiddleware,
-  (req, res) => {
-    try {
-      return res.render("pages/auth/myAccount/index", {
-        refreshToken: req.cookies.refreshToken,
-      });
-    } catch (err) {
-      next(err);
-    }
-  }
+  accessMiddleware(),
+  renderController.renderMyAccountPage
+);
+
+userRouter.get(
+  "/adminPage",
+  accessMiddleware(true),
+  renderController.renderAdminPage
 );
 
 module.exports = userRouter;
