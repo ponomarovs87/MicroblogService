@@ -105,3 +105,46 @@ button[type=submit] {
 button[type=submit]:hover {
   background-color: #218838;
 }
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.tags-input {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid #ccc;
+  padding: 5px;
+  min-height: 40px;
+}
+
+.tags-input input {
+  border: none;
+  outline: none;
+  flex: 1;
+}
+
+.tag {
+  background: #007bff;
+  color: white;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.tag .remove-tag {
+  margin-left: 5px;
+  cursor: pointer;
+}

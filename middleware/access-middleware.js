@@ -7,7 +7,6 @@ const userService = require("../service/user-service");
 module.exports = function (checkAdmin = false) {
   return async function (req, res, next) {
     const { refreshToken } = req.cookies;
-
     try {
       const token =
         tokenService.validateRefreshToken(refreshToken);

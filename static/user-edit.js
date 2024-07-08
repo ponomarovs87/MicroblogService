@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => {
         if (!response.ok) {
           return response.json().then((errorData) => {
-            debugger;
             throw errorData;
           });
         }
